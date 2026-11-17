@@ -1,10 +1,15 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>etcetera</title><style>
 body { margin: 0; background: #fff; }
+/* Schrift: Inter Tight (SIL Open Font License), selbst gehostet unter fonts/ */
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("fonts/inter-tight-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 500; font-display: swap;
+  src: url("fonts/inter-tight-latin-500-normal.woff2") format("woff2"); }
 /* etcetera – alles unter .etc, damit Cargos eigene Stile nicht kollidieren */
 .etc { --grund: #fff; --ink: #000; --grau: #8a8a8a; --linie: rgba(0,0,0,.6); --haar: rgba(0,0,0,.14);
   --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 28px;
-  font: 14px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--grund);
+  font: 500 14px/1.45 "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: -0.012em; color: var(--ink); background: var(--grund);
   -webkit-font-smoothing: antialiased; }
 .etc * { box-sizing: border-box; }
 .etc p, .etc h2, .etc ol, .etc figure, .etc dl, .etc dd { margin: 0; padding: 0; }
@@ -142,6 +147,11 @@ body { margin: 0; background: #fff; }
   .etc .etc-karte .etc-auf { padding-left: var(--rand); }
   .etc .etc-tafel-leer, .etc .etc-ueber { padding: 20px var(--rand); }
 }
+
+/* Grau etwas leichter */
+.etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
+.etc .etc-leeren, .etc .etc-vorschlag { font-weight: 400; }
+.etc .etc-text strong, .etc .etc-text th { font-weight: 600; }
 </style></head>
 <body>
 <div class="etc" id="etc">
@@ -502,7 +512,7 @@ body { margin: 0; background: #fff; }
         else { ctx.fillStyle = (i === hover || markiert[n.id]) ? '#fff' : (hell ? (n.k === 'bilder' ? '#d0d0d0' : '#8f8f8f') : '#2a2a2a'); ctx.fill(); }
         if (markiert[n.id]) { ctx.beginPath(); ctx.arc(n.dx, n.dy, n.r + 3.5 / z, 0, 6.2832); ctx.lineWidth = 1 / z; ctx.strokeStyle = '#fff'; ctx.stroke(); }
       });
-      ctx.font = (14 / z) + 'px "Helvetica Neue", Helvetica, Arial, sans-serif';
+      ctx.font = '500 ' + (14 / z) + 'px "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       N.forEach(function (n, i) {
         var zeig = hv ? nah[i] : (markiert[n.id] || n.r * z > 5.5 || z > 2.2);
