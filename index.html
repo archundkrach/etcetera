@@ -1,22 +1,791 @@
 <!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>etcetera</title>
-<meta name="robots" content="noindex">
-<style>
-  html, body { margin: 0; background: #fff; color: #000; }
-  body { font: 14px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-  main { padding: 20px 16px; max-width: 46ch; }
-  p { margin: 0 0 0.9em; }
-  .grau { color: #8a8a8a; }
-</style>
-</head>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>etcetera Vorschau</title><style>
+body { margin: 0; background: #fff; }
+/* etcetera – alles unter .etc, damit Cargos eigene Stile nicht kollidieren */
+.etc { --grund: #fff; --ink: #000; --grau: #8a8a8a; --linie: rgba(0,0,0,.6); --haar: rgba(0,0,0,.14);
+  --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 16px;
+  font: 15px/1.35 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--grund);
+  -webkit-font-smoothing: antialiased; }
+.etc * { box-sizing: border-box; }
+.etc p, .etc h2, .etc ol, .etc figure, .etc dl, .etc dd { margin: 0; padding: 0; }
+.etc a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--haar); }
+.etc a:hover { border-bottom-color: var(--ink); }
+.etc .etc-grau { color: var(--grau); font-weight: 400; }
+.etc .etc-x { display: inline-block; background: var(--ink); white-space: pre; height: 1em; vertical-align: -0.12em; }
+.etc .etc-intro { display: none; }
+
+/* Listen: Zeilen mit Linie, Titel kursiv in Versalien */
+.etc .etc-thema h2 { font: inherit; font-size: 13px; color: var(--grau); padding: 28px var(--rand) 8px; }
+.etc ol { list-style: none; }
+.etc .etc-thema > ol > li { border-bottom: 1px solid var(--linie); }
+.etc summary { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr) auto; gap: 0 16px; padding: 11px var(--rand); cursor: pointer; list-style: none; }
+.etc summary::-webkit-details-marker { display: none; }
+.etc .etc-ti { min-width: 0; font-style: italic; text-transform: uppercase; letter-spacing: 0.01em; }
+.etc .etc-nr, .etc .etc-typ, .etc .etc-pos { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.etc .etc-typ { color: var(--grau); }
+.etc summary:hover .etc-ti { color: var(--grau); }
+.etc .etc-auf-tafel > details > summary { background: var(--ink); color: var(--grund); }
+.etc .etc-auf-tafel > details > summary .etc-typ, .etc .etc-auf-tafel > details > summary .etc-nr { color: rgba(255,255,255,.62); }
+.etc .etc-auf-tafel > details > summary:hover .etc-ti { color: inherit; }
+
+/* Inhalte aus den Notizen: eine Schrift, ruhige Abstände */
+.etc .etc-auf > * + * { margin-top: 14px; }
+.etc details > .etc-auf { padding: 4px var(--rand) 24px calc(var(--rand) + var(--spalte) + 16px); }
+.etc .etc-dl { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr); gap: 3px 16px; font-size: 13px; }
+.etc .etc-dl dt { color: var(--grau); }
+.etc .etc-bez { font-size: 13px; }
+.etc .etc-text { max-width: 62ch; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.etc .etc-text > :first-child { margin-top: 0; }
+.etc .etc-text p { margin: 0 0 0.75em; }
+.etc .etc-text h2, .etc .etc-text h3, .etc .etc-text h4 { font: inherit; font-weight: 600; margin: 1.4em 0 0.35em; padding: 0; }
+.etc .etc-text strong { font-weight: 600; }
+.etc .etc-text code { font: inherit; }
+.etc .etc-text ul { list-style: none; margin: 0 0 0.75em; padding: 0; }
+.etc .etc-text li { position: relative; padding-left: 1.1em; margin: 0 0 0.2em; }
+.etc .etc-text li::before { content: "–"; position: absolute; left: 0; color: var(--grau); }
+.etc .etc-text table { border-collapse: collapse; font-size: 13px; margin: 0.4em 0 1em; }
+.etc .etc-text th, .etc .etc-text td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--haar); }
+.etc .etc-text th { font-weight: 600; border-bottom-color: var(--linie); }
+.etc .etc-text .tw { overflow-x: auto; }
+.etc .etc-text .box { display: inline-block; width: 0.7em; height: 0.7em; border: 1px solid; margin-right: 6px; }
+.etc .etc-text .box.done { background: var(--ink); }
+.etc figure img { display: block; max-width: 100%; height: auto; }
+.etc .etc-ueber { padding: 20px var(--rand) 20px calc(var(--rand) + var(--spalte) + 16px); max-width: calc(48ch + 160px); }
+.etc .etc-ueber p, .etc .etc-tafel-leer p { font-size: 14px; line-height: 1.45; margin: 0 0 0.9em; }
+.etc .etc-ueber .etc-intro-hinweis, .etc .etc-tafel-leer .etc-intro-hinweis { color: var(--grau); margin-top: 1.6em; }
+
+/* Bühne (nur mit JavaScript; ohne steht alles untereinander): immer in der Mitte geteilt */
+.etc.etc-js .etc-quelle { display: none; }
+.etc .etc-buehne { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; }
+.etc .etc-links { min-height: 0; border-right: 1px solid var(--linie); background: var(--grund); color: var(--ink); transition: background-color .25s, color .25s; }
+.etc .etc-links.etc-links-graph { --grund: #000; --ink: #fff; --linie: rgba(255,255,255,.55); --haar: rgba(255,255,255,.22);
+  --feld: #262626; --feldrand: #444; --pfeil: #ddd; border-right-color: #000; }
+.etc .etc-liste-bereich { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.etc .etc-kopf { position: relative; display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 0 var(--rand); flex: 0 0 auto; border-bottom: 1px solid var(--linie); }
+.etc .etc-ihalt { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 80px; }
+.etc .etc-ihalt, .etc .etc-tafel { scrollbar-width: none; -ms-overflow-style: none; }
+.etc .etc-ihalt::-webkit-scrollbar, .etc .etc-tafel::-webkit-scrollbar { display: none; }
+.etc .etc-ihalt .etc-thema:first-child h2 { padding-top: 18px; }
+
+/* Menü: Auswahlfeld wie ein Systemfeld; die Liste klappt an seiner Oberkante nach unten auf */
+.etc .etc-wahl-knopf { flex: 1 1 auto; display: block; width: 100%; font: inherit; font-size: 14px; line-height: 20px; text-align: left; cursor: default;
+  color: var(--ink); background: var(--feld) no-repeat right 9px center / 8px 12px; border: 1px solid var(--feldrand); border-radius: 6px; padding: 3px 28px 3px 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1 4.5 4 1.5 7 4.5M1 7.5 4 10.5 7 7.5' fill='none' stroke='%23333' stroke-width='1.3'/%3E%3C/svg%3E"); }
+.etc .etc-links-graph .etc-wahl-knopf { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1 4.5 4 1.5 7 4.5M1 7.5 4 10.5 7 7.5' fill='none' stroke='%23ddd' stroke-width='1.3'/%3E%3C/svg%3E"); }
+.etc .etc-wahl-knopf:focus-visible, .etc .etc-wahl-knopf[aria-expanded="true"] { outline: 3px solid rgba(42,110,232,.45); outline-offset: 0; }
+.etc .etc-wahl-liste { position: absolute; top: 10px; left: var(--rand); right: var(--rand); z-index: 30; padding: 5px 5px 10px;
+  background: #f4f4f4; color: #000; border-radius: 7px; box-shadow: 0 0 0 .5px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.18); font-size: 14px; line-height: 1.25; }
+.etc .etc-links-graph .etc-wahl-liste { background: #2a2a2a; color: #fff; box-shadow: 0 0 0 .5px rgba(255,255,255,.2), 0 10px 30px rgba(0,0,0,.5); }
+.etc .etc-wahl-liste[hidden] { display: none; }
+.etc .etc-wahl-trenner { height: 1px; margin: 5px 9px; background: rgba(0,0,0,.14); }
+.etc .etc-links-graph .etc-wahl-trenner { background: rgba(255,255,255,.18); }
+.etc .etc-suche-kopf { flex: 1 1 auto; display: block; width: 100%; font: inherit; font-size: 14px; line-height: 20px; color: var(--ink);
+  background: var(--feld); border: 1px solid var(--feldrand); border-radius: 6px; padding: 3px 10px; outline: none; -webkit-appearance: none; appearance: none; }
+.etc .etc-suche-kopf:focus { outline: 3px solid rgba(42,110,232,.45); outline-offset: 0; }
+.etc .etc-suche-kopf[hidden], .etc .etc-wahl-knopf[hidden], .etc .etc-vorschlag-box[hidden] { display: none; }
+.etc .etc-vorschlag-box { position: absolute; top: 42px; left: var(--rand); right: var(--rand); z-index: 30; display: flex; flex-wrap: wrap; gap: 3px 12px;
+  padding: 8px 10px 10px; background: #f4f4f4; color: #000; border-radius: 7px; box-shadow: 0 0 0 .5px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.18); }
+.etc .etc-links-graph .etc-vorschlag-box { background: #2a2a2a; color: #fff; }
+.etc .etc-vorschlag { font: inherit; font-size: 14px; color: inherit; background: none; border: 0; padding: 1px 0; cursor: pointer; }
+.etc .etc-vorschlag:hover { text-decoration: underline; text-underline-offset: 2px; }
+.etc .etc-impressum-angaben { margin-top: 2em; }
+.etc .etc-ueber .etc-impressum-angaben p { margin: 0 0 0.3em; }
+.etc .etc-nichts { padding: 18px var(--rand); color: var(--grau); font-style: italic; }
+.etc .etc-vorschlaege { display: none; }
+.etc .etc-luecke { color: #c00; }
+.etc .etc-wahl-punkt { position: relative; display: block; width: 100%; font: inherit; color: inherit; background: none; border: 0; border-radius: 4px;
+  padding: 3px 10px 3px 26px; text-align: left; cursor: default; }
+.etc .etc-wahl-punkt.etc-aktiv::before { content: "✓"; position: absolute; left: 9px; }
+.etc .etc-wahl-punkt:hover { background: #2a6ee8; color: #fff; }
+
+/* Graph */
+.etc .etc-graph-bereich { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
+.etc .etc-graph { position: relative; }
+.etc .etc-graph canvas { display: block; touch-action: none; cursor: grab; }
+.etc .etc-graph-info { position: absolute; left: var(--rand); right: var(--rand); bottom: 14px; color: var(--grau); font-size: 13px; pointer-events: none; }
+
+/* Sammlung rechts */
+.etc .etc-tafel-bereich { min-height: 0; display: flex; flex-direction: column; }
+.etc .etc-tafel-kopf { justify-content: space-between; }
+.etc .etc-tafel-titel { font-size: 14px; }
+.etc .etc-uhr { font-variant-numeric: tabular-nums; margin-left: 2px; }
+.etc .etc-tafel-knoepfe { display: flex; align-items: center; gap: 18px; }
+.etc .etc-leeren { font: inherit; font-size: 14px; color: var(--grau); background: none; border: 0; padding: 0; cursor: pointer; }
+.etc .etc-leeren:hover { color: var(--ink); }
+.etc .etc-tafel { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 0 80px; display: grid; grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row dense; align-content: start; }
+.etc .etc-karte { grid-column: 1 / -1; border-bottom: 1px solid var(--linie); }
+.etc .etc-karte-bild { grid-column: auto; border-right: 1px solid var(--haar); }
+.etc .etc-karte-bild:nth-child(even) { border-right: 0; }
+.etc .etc-karte-kopf { display: grid; grid-template-columns: var(--pos) minmax(0, 1fr) auto auto; gap: 0 16px; padding: 11px var(--rand); align-items: baseline; }
+.etc .etc-karte-bild .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
+.etc .etc-karte-bild .etc-karte-kopf .etc-typ { display: none; }
+.etc .etc-karte-zu { font: inherit; font-size: 18px; line-height: 1; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; }
+.etc .etc-karte-zu:hover { color: var(--grau); }
+.etc .etc-karte .etc-auf { padding: 2px var(--rand) 26px calc(var(--rand) + var(--pos) + 16px); }
+.etc .etc-karte-bild .etc-auf { padding: 0 var(--rand) var(--rand); }
+.etc .etc-neu-da { animation: etc-da .6s ease-out; }
+@keyframes etc-da { from { background: rgba(0,0,0,.06); } to { background: transparent; } }
+
+/* Startbildschirm rechts: derselbe Text wie unter „über“ */
+.etc .etc-tafel-leer { grid-column: 1 / -1; padding: 20px var(--rand) 40px calc(var(--rand) + var(--pos) + 16px); max-width: calc(48ch + 120px); }
+
+@media (max-width: 800px) {
+  .etc { font-size: 14px; --rand: 14px; }
+  .etc .etc-buehne { display: block; height: auto; }
+  .etc .etc-links { height: 75vh; border-right: 0; border-bottom: 1px solid var(--linie); }
+  .etc .etc-tafel-bereich { min-height: 60vh; }
+  .etc .etc-tafel { grid-template-columns: 1fr; overflow: visible; }
+  .etc .etc-karte-bild { border-right: 0; }
+  .etc summary { grid-template-columns: var(--spalte) minmax(0, 1fr); }
+  .etc .etc-typ { display: none; }
+  .etc .etc-karte .etc-auf { padding-left: var(--rand); }
+  .etc .etc-tafel-leer, .etc .etc-ueber { padding: 20px var(--rand); }
+}
+</style></head>
 <body>
-<main>
-  <p>etcetera</p>
-  <p class="grau">im Aufbau</p>
-</main>
-</body>
-</html>
+<div class="etc" id="etc">
+<div class="etc-quelle">
+<div class="etc-vorschlaege" data-v="[&quot;thema&quot;, &quot;material&quot;, &quot;farbe&quot;, &quot;bauwerk&quot;, &quot;fundstück&quot;, &quot;norm&quot;, &quot;anleitung&quot;, &quot;holz&quot;, &quot;fenster&quot;, &quot;anbau&quot;, &quot;holzdeck&quot;, &quot;einbaumöbel&quot;, &quot;vordach&quot;, &quot;weiß&quot;, &quot;metall&quot;, &quot;kornelimünster&quot;]"></div>
+<section class="etc-thema" data-thema="ueber" data-titel="über"><h2>über</h2><div class="etc-ueber"><div class="etc-impressum"><p>etcetera ist das Arbeitsarchiv von Christian Sternhagen und Jonathan Burkard. Es geht auf Christians Masterarbeit „das wilde bauen“ an der Leibniz Universität Hannover zurück: die Frage, wie sich Menschen, Orte, Ideen und vorhandene Ressourcen zu Architektur verbinden lassen. 2026 begann es als Ablage für den Umbau eines Hauses von 1953 in Aachen-Kornelimünster und wächst seitdem mit jedem Projekt, jedem Fund und jeder Frage, die sich ein zweites Mal stellt.</p></div><div class="etc-impressum-angaben"><p class="etc-grau">impressum</p><p>Jonathan Burkard<br>Driesener Straße 67<br>10439 Berlin<br>archundkrach@gmail.com</p></div></div></section>
+<div class="etc-intro"><p>Ein offenes Archiv aus der laufenden Arbeit an Architektur: Protokolle, Normen, Referenzen, Material, Werkzeuge und Orte, so wie sie im Projekt anfallen, und die Verbindungen zwischen ihnen.</p><p>Nichts davon ist fertig. Der Alltag steht neben dem Entwurf, das Vorgefundene neben dem Neuen, das Eigene neben dem, was andere gebaut und geschrieben haben.</p><p class="etc-intro-hinweis">Links eine Liste oder den Graphen wählen.</p></div>
+<section class="etc-thema" data-thema="texte" data-titel="texte"><h2>texte <span class="etc-grau">7</span></h2><ol><li id="e35" data-id="e35" data-such="bauherrin 2026-10-22 2026-10-22 termin texte"><details><summary><span class="etc-nr">2026-10-22</span><span class="etc-ti">Bauherrin</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>Besprechung <span class="etc-x" aria-label="geschwärzt">                </span>:</h3>
+<p>Realistischer Zeitplan:</p>
+<p>2026:</p>
+<ul><li>Schadstoffuntersuchung</li><li>Abbruch/Entkernung</li><li>Kanalsanierung</li><li>Detailplanung/Werkplanung mit Ansichten etc. aus Erkenntnissen der Entfernungen fertigstellen</li><li>Kostenberechnung</li></ul>
+<p>2027:</p>
+<ul><li>Ausschreibung/Vergabe</li><li>Fortlaufende Werkplanung</li><li>Start der Rohbauarbeiten, technische Einbauten, Innenausbau</li><li>Fertigstellung voraussichtlich im Sommer 2027</li></ul>
+<p>Maßnahmenkatalog Umbau EFH:</p>
+<p>Bauliche Maßnahmen:</p>
+<ul><li>Rückbau/Abbruch aller Oberflächen im EG und OG bis auf Rohbau (Boden, Wände, Decken)</li><li>Durchbrüche:  Bodentiefer Durchbruch Fassade Ost (Pos. 1), Durchbruch normales Fenster im Bad (Pos. Noch nicht in Statik vorhanden), 2x Bodentiefe Öffnung Fassade Süd (Pos. Noch nicht in Statik vorhanden), Abbruch nichttragender Wände (4 Stk.: Pos. 2, Pos. 4, Pos. 5), Neue Wandöffnung (Pos. 3)</li><li>Neue Fenster: 8x im EG, 3x im 1.OG, davon: 1x großes Schiebeelement (ca. 2,90m); 3x bodentiefe Öffnungsflügel (ca. 1,60m, 2x im EG, 1x im OG)</li><li>Neue Türen: 1x Neue Eingangstür Fassade Ost</li><li>Neue Außenwände: Neue Mauer in d. Fassade Ost (Anschluss Pos. 1)</li><li>Sanierung d. Kanals durch Inlineverfahren o. Ähnliches</li><li>Neue Wasserleitungen im gesamten Haus</li><li>Neuer Bodenaufbau: Dämmung, Estrich, Bodenbelag (Im Detail zu klären)</li><li>Neue massive Innenwände: Neue Wand zw. Schlafzimmer und Küche (Bims Hohlblock, 30cm), Neues Randstück zwischen Verteiler und Bad (Bims Hohlblock, 30cm), Neue MW-Wände im Badezimmer (voraussichtlich 2 Stk. 11,5 MW)</li><li>Neue nichttragende Wände: Neue Badezimerwand, ggf. teilweise Transluzent</li><li>Neue Träger/Stützen (Stahl):</li><li>Neue Schreinerarbeiten: Schrankwand ca. 11,00m mit div. Funktionen und als Raumtrenner</li><li>Neue Küche</li><li>Neue Armaturen in den Badezimmern (Gäste-WC, Hauptbad, Badezimmer 1.OG)</li><li>Fassade wird am Ende neu verputzt</li></ul>
+<p>Energetische Maßnahmen:</p>
+<ul><li>Dämmung Dachboden, Dämmung Dach Anbau, Dämmung Bodenbelag EG, neue Fenster</li><li>Wärmepumpe</li><li>Neue Heizkörper</li></ul>
+<p>Feedback <span class="etc-x" aria-label="geschwärzt">       </span> 22.10.26</p>
+<ul><li>Heizkörper im Wohnzimmer, reicht da einer?</li><li>Sie möchte gerne eine „Begehbare Dusche“ und hat Sorge vor Einsichtigkeit, sprich sie kann sich nicht vorstellen mit transluzenten bodentiefen Elementen zu arbeiten!</li></ul></div></div></details></li><li id="e36" data-id="e36" data-such="energieberatung 2026-10-22 2026-10-22 termin texte"><details><summary><span class="etc-nr">2026-10-22</span><span class="etc-ti">Energieberatung</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>Protokoll 22.10.26</h3>
+<p>Fragen an Energieberatung Berrenberg:</p>
+<ul><li>Ist eine Wärmepumpe sinnvoll bei einem umgedämmten Altbau? Was kostet eine WP?</li></ul>
+<ul><li>Welche Maßnahmen der vorgeschlagenen sind bei diesem Bauvorhaben unbedingt notwendig (Kostengründe)</li></ul>
+<ul><li>Sind die Maßnahmen als Einzelmaßnahmen alle förderfähig? Wer stellt den Förderantrag? (Vermutl. Bauherrin) Gibt es Förderzyklen? Wenn ja, wann sind die?</li><li>Vorgangsnummer merken, wird bei Antrag benötigt</li><li>15% auf die ersten <span class="etc-x" aria-label="geschwärzt">       </span> und mit iFSP bis zu <span class="etc-x" aria-label="geschwärzt">       </span> pro Jahr - (Man kann immer pro Jahr <span class="etc-x" aria-label="geschwärzt">       </span> fördern lassen, alles darüber hinaus fällt dann ins nächste Jahr)</li><li>BauSep f. Materialpreise (?)</li><li>Ganzes EG: 8CM PUR-Schaum, dann förderfähig; Wenn wir 10% aller Bauteilfläche ändern müssen wir ab dann nach Gebäudemodernisierungsgesetz einen U-Wert von 0,3 einhalten</li><li>Wenn Dachflächen von Innen, dann 16cm</li><li>Flachdach: Aufsparrendämmung v. Bauder PIR PLUS 12cm, Förderfähig ist es ab 0,14 U-Wert</li><li>Dämmung Dach v. Anbau sinnvoll? Dämmung Bodenaufbau?:</li></ul>
+<ul><li>Hydraulischer Abgleich f. Heizung: Gibt zahlen vom Energieberater, dann kann der SHK Betrieb damit arbeiten (VDZ-Formular)</li></ul>
+<ul><li>Wärmepumpe ist immer die sinnvollste Heizmethode, Heizkörper müssen große flache haben sodass Vorlauftemperatur runter geht - dann ist es sinnvoll!</li><li>Herstellerempfehlung: EVO-TEC GmbH; Lebherz &amp; Partner Aachen (machen auch PV): Immer Installation und Service/Wartung anbieten lassen!; Lambda WP werden bei Zewotherm in Remagen hergestellt und angeboten - das sind sehr gute Was</li><li>Taupunktverschiebung d. Fenster unter welchen Umständen kein Problem?:</li></ul>
+<p>Mit Fensterbauer zu klären und Fachunternehmererklärung geben lassen: Calciumsilikatplatten sind alkalisch, dämmt ein wenig und ist daher in der Laibung sinnvoll, keine Silikonfugen, Fenster mit Kompriband wird vor den Stoß gesetzt, Leitfaden v. Fachhochschule Rosenheim o. Von RAL</p>
+<ul><li>Thema PV: Keine Mehrwertsteuer aber sonst keine Bezuschussung mehr</li></ul>
+<ul><li>Heizlastberechnung: Dachdämmung im Anbau, Neue Fenster (0,9 kriegt man besser hin 0,5-0.7), Türen wurden getauscht, Dachboden gedämmt, Boden auch gedämmt (2-3 mindestens, 8cm wären gefördert)</li></ul>
+<ul><li>Wer reicht welche Anträge ein?:</li><li>Dämmgeschichten macht Energieberater (Sachen bei BAFA)</li><li>Wärmepumpen machen auch die Installateure (KfW-Bank Sachen)</li><li>Für die Förderung braucht man ein Konkretes Angebot einer Fachfirma sowie die Beauftragung mit Liefer/Leistungsvertrag mit aufschiebender Bedingung;</li></ul>
+<p>Wärmepumpe bis allerspätestens Ende Januar ( Ab Februar 2027 -4%): Alle details dazu bei KFW 458</p></div></div></details></li><li id="e23" data-id="e23" data-such="anpassungen werkvertrag 2026-09-19 2026-09-19 termin texte"><details><summary><span class="etc-nr">2026-09-19</span><span class="etc-ti">Anpassungen Werkvertrag</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>Anpassungen Werkvertrag vom 19.09.2026</h3>
+<p>Titel angepasst – &quot;mit vorgeschalteter Zielfindungsphase&quot; gestrichen, da diese Phase bereits vor Vertragsschluss abgeschlossen war.<br>Offene Punkte (Umnutzung Obergeschoss, Carport etc.) – klargestellt, dass diese im Rahmen der Entwurfsplanung besprochen und entschieden werden; ein gesondertes Kündigungsrecht hierfür gibt es nicht.<br>Bauvorlagen – präzisiert, dass wir Zeichnungen als fachliche Grundlage erstellen, die formelle Einreichung beim Bauamt aber – wie bereits an anderer Stelle im Vertrag erwähnt – eine separat zu beauftragende, bauvorlageberechtigte Person übernimmt.<br>Baukünstlerische Oberleitung (gestalterische Begleitung während der Bauphase) – ergänzt, wann und wie diese stattfindet, je nachdem ob die Objektüberwachung separat beauftragt wird oder nicht.<br>Honorar für Zusatzleistungen – klargestellt, dass Klärungsgespräche zu offenen Punkten im regulären Stundenhonorar enthalten sind, nicht doppelt berechnet werden.<br>Verweise innerhalb des Vertrags korrigiert – ein paar Absatzverweise (Vertragslaufzeit, Abnahme) wurden vereinheitlicht, da sie sich auf einen zwischenzeitlich gestrichenen Absatz bezogen hatten.<br>Kleinere Schreibfehler korrigiert.</p></div></div></details></li><li id="e22" data-id="e22" data-such="rohbau und shk 2026-09-18 2026-09-18 termin texte"><details><summary><span class="etc-nr">2026-09-18</span><span class="etc-ti">Rohbau und SHK</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>Protokoll 18.09.26</h3>
+<p>Ortsbegehung Scheepers Rohbau:</p>
+<ul><li>Scheepers kann die Durchbrüche, Rückbau, Neubauten der Wände machen (2-3 Tage f. 3 Leute)</li><li>Er braucht von uns: Konkrete Pläne mit Maßen, Kleines Leistungsverzeichnis: Was muss exakt wo gemacht werden? „Bodenabbruch bis Estrich“, „Abbruch der Wandverkleidung“ etc.</li><li>Er braucht Statik</li></ul>
+<p>Ortsbegehung SHK Rademacher:<br>Thema Heizung/Energie:</p>
+<ul><li>Heizlast berechnen + Rohrnetzberechnung + hydraulischer Abgleich- Das macht Energieberatung (Kontakt: <span class="etc-x" aria-label="geschwärzt">             </span>: <span class="etc-x" aria-label="geschwärzt">             </span>)</li><li>Rohrnetzberechnung Kontakt: <span class="etc-x" aria-label="geschwärzt">            </span> <span class="etc-x" aria-label="geschwärzt">             </span></li><li>Betrieb/Planung der PV-Anlage sowie Wärmepumpe muss dem Netzbetreiber gemeldet werden</li><li>Bestandsheizung ist ein Brennwertgerät</li><li>Heizungsleitungen: Alles außer Kupfer muss getauscht werden, alles muss isoliert werden</li></ul>
+<p>Thema Trinkwasser:</p>
+<ul><li>Ist Zinkrohrleitung, muss getauscht werden, eig. Komplett neu, Filter sind in Ordnung, aber Leitungen neu</li></ul>
+<p>Thema Kanal:</p>
+<ul><li>Wo ist die OK Rückstauebene? OKRSE = OK Strasse/Erde?</li><li>Wo wird das Regenwasser hingeleitet? Läuft das in den Keller? Wäre problematisch, Thema Rückstaueebene</li><li>Leitungsführung Kanäle klären, was muss getauscht werden? Risse etc.?</li></ul>
+<ul><li>Generell: Konkrete Pläne inkl. Heizlast etc. verschicken an ihn, dann kann er Aussagen</li></ul></div></div></details></li><li id="e21" data-id="e21" data-such="bauamt 2026-09-16 2026-09-16 termin texte"><details><summary><span class="etc-nr">2026-09-16</span><span class="etc-ti">Bauamt</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>Besprechung 16.09.26</h3>
+<p>Projektinformationen:</p>
+<ul><li>Umbau/Modernisierung eines Einfamilienhauses in Aachen, Kornelimünster</li><li>Adresse: <span class="etc-x" aria-label="geschwärzt">             </span>, <span class="etc-x" aria-label="geschwärzt">                    </span>, Gebäudeklasse 2</li><li>Baujahr 1953, Anbau ca. 1960-65 gefolgt, Fläche: 175,5QM — 80 (EG)+ 48 (OG)+ 47,5 (UG) Nutzfläche —</li><li>Vorhaben liegt nicht in einem B-Plan Gebiet, es liegt im Innenbereich (nicht im Außenbereich), es ist kein Baudenkmal und es gibt keine örtliche Gestaltungsvorschrift</li></ul>
+<p>Was wir vorhaben:</p>
+<ul><li>Teilentkernung und Austausch der innenliegenden Oberflächen (Neue Bodenbeläge, neuer Anstrich)</li><li>Mehrere Durchbrüche: Durchbruch Küche-Wohnzimmer (ca. 2,60m, tragendes Bauteil), Abbruch der Brüstung der Wohnzimmerfassade (ca.3,95m), Abbruch der Brüstungen Küche + Schlafzimmer, Neue Fensteröffnung im Badezimmer (kleines untergeordnetes Fenster, max. 80cm Durchmesser)</li></ul>
+<p>§ 62 Abs. 11 a und 11b: Geringfügige Eingriffe in die Statik  sind verfahrensfei. (z.B. kleiner Durchbruch; Unbedenklichkeitsbescheinigung wird vom Statiker auf Nachfrage zur Verfügung gestellt)</p>
+<ul><li>Energetische Maßnahmen: Neue Fenster, Solarpaneele, Wärmepumpe</li><li>Elektr. Gesamtsanierung</li><li>Austausch/Sanierung der Rohre</li><li>Errichtung eines neuen Carports auf dem Grundstück</li><li>Ggf. Einfriedung / Sichtschutz zum Nachbar</li></ul>
+<p>Wir versuchen das Haus mit möglichst wenig Eingriffen, die den Charakter des Bestands nicht verändern, so gut wie möglich wieder in Schuss zu bringen, sodass <span class="etc-x" aria-label="geschwärzt">             </span> dort zeitnah einziehen kann. Daher besteht die Absicht, dass das Verfahren im Bereich der Verfahrensfreiheit nach § 62 BauO NRW liegt.</p>
+<p>Unsere Fragen:</p>
+<ul><li>Unter welchen Bedingungen liegt dieses Verfahren innerhalb bzw. außerhalb der Verfahrensfreiheit (Wir sind noch keine eingetragenen Architekten, daher für uns sehr wichtig zu klären)</li><li>Welche Unterlagen müssen im Falle der Verfahrensfreiheit beim Bauamt vorgelegt werden? Ist der Umbau dann irgendwo zu melden?</li></ul>
+<p>Unbedenklichkeitsbescheinigung Statik,</p>
+<ul><li>Wo darf das Carport auf dem Grundstück liegen, wie groß darf es sein &amp; ist eine Veränderung der Zufahrt zulässig?</li></ul>
+<p>Bis zu 30 Kubikmeter pro Gebäude zulässig (löst keine Abstandsflächen aus) - Zufahrt muss gewährleistet sein. Absetzung des Bordsteins - FB 68 Verkehrsplanung anfragen</p>
+<ul><li>Dürfen wir theoretisch einfrieden zum Nachbar hinten? Wenn ja wie lang &amp; wie hoch darf die Mauer sein?</li></ul>
+<p>Max. 2 Meter Einfriedung (Bauordnung) - Nachbarschaftsschutzgesetz prüfen (Privatrecht)</p>
+<ul><li>Wir würden gerne einen Wasseranschluss ins 1. OG legen, sodass irgendwann eine zweite Küche installiert werden könnte, ist das zulässig?</li></ul>
+<p>Ist zulässig solange keine Nutzungsänderung vorliegt. Brandschutz beachten beim verlegen von Leitungen</p>
+<ul><li>Sonstiges</li></ul>
+<p>Hecke darf nur zwischen 01.04 - 30.09 geschnitten/entfernt werden<br>Neue Fenster kein Problem aber auch ein Unbedenklichkeitsbescheinigung erforderlich<br>Bäume richtig einzeichnen oder weglassen</p></div></div></details></li><li id="e13" data-id="e13" data-such="besprechung 2026-08-25 2026-08-25 termin texte"><details><summary><span class="etc-nr">2026-08-25</span><span class="etc-ti">Besprechung</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>Besprechung 25.08.2026</h3>
+<ul><li>GR mit Innenmaße</li><li>2 Varianten - GR</li></ul>
+<p>An <span class="etc-x" aria-label="geschwärzt">       </span> schicken</p>
+<ul><li>Baumdeadline 01.05.2027</li><li>Schreiner: <span class="etc-x" aria-label="geschwärzt">                 </span></li><li>Planung Badezimmer - Dusche und Wanne (Planung <span class="etc-x" aria-label="geschwärzt">       </span>)</li></ul></div></div></details></li><li id="e8" data-id="e8" data-such="ortsbegehung 2026-07-31 2026-07-31 termin texte"><details><summary><span class="etc-nr">2026-07-31</span><span class="etc-ti">Ortsbegehung</span><span class="etc-typ">termin</span></summary><div class="etc-auf"><div class="etc-text"><h3>31.07.26 Protokoll - Ortsbegehung</h3>
+<p>Baubeschreibung:</p>
+<p>Bauvorhaben in <span class="etc-x" aria-label="geschwärzt">             </span>, Kornelimünster (<span class="etc-x" aria-label="geschwärzt">         </span>): Bei dem Bestandshaus (freistehend, Baujahr 1953, später um einen eingeschossigen Anbau erweitert, Gebäudeklasse 2) wünscht sich die Bauherrschaft verschiedene Anpassungen, die vor allem im Innenbereich liegen. Im Allgemeinen:<br>Das Haus wird Teil-Entkernt. Der Großteil der Oberflächen soll abgebrochen und ausgetauscht werden, ein paar Nicht-tragende Wände werden abgerissen, ein paar bleiben bestehen - Entwurfsabhängig zu klären.<br>Im Einzelnen ist Folgendes geplant.</p>
+<ul><li>Zwei Durchbrüche, die statische Bauteile betriffen. Standsicherheitsnachweis eines sachkundigen Statikers wird beauftragt.</li><li>Eine neue Öffnungen in der Außenfassade zur Straßenseite</li><li>Neues elektr. Garagentor + Elektroanschluss in Garage! (Wichtig für BH)</li><li>Zweifache Anpassung der Brüstungshöhe zu Bodentiefen Fensterelementen in der Außenfassade zur benachbarten Grundstücksseite.</li><li>Austausch der bestehenden Fenster durch neue Holzfenster (Einzelmaßnahme energ. Sanierung)</li><li>Änderung der Bödenbeläge, Wandbeläge,Türen, Einbau von neuen Nicht-tragenden Wänden</li><li>Neue Schreinerarbeiten hinsichtlich Einbauschränken</li><li>Ertüchtigung der Sanitären anlagen, hinzufügen eines weiteren WC's im Bestandsbad, neue fliesen, neue Oberflächen, neue Rohrleitungen</li><li>PV-Anlage auf dem Flachdach, ggf. Wärmepumpe hier noch austausch mit energieberater notwendig</li><li>Neue Terassenoberflächen, ein Vordach/Carport als Wetter und Sonnenschutz im Osten als Anbau an den Bestand</li><li>Neues Holzdeck als zweite Terasse an der Küche und Schlafzimmer im Süden angeschlossen</li><li>Einfriedung/Sichtschutz zum Nachbargrundstück im Süden</li><li>Bodentiefe Eckverglasung im Anbau</li><li>Neue Eingangstür im Anbau</li><li>Neue Eingangssituation im Treppenraum</li></ul>
+<ul><li>Budget:  max. <span class="etc-x" aria-label="geschwärzt">        </span> ; eher <span class="etc-x" aria-label="geschwärzt">        </span></li><li>Statiker braucht: Vorentwurf mit Durchbrüchen, Scan Bestandspläne</li><li>Feuchtigkeit/Rohre prüfen: Kanalfahrt + Dachentwässerung prüfen mit AREI, WILDEN, SCHNEIDER; Wo liegen Steigleitungen, wie kriege ich WC in das andere Badezimmer? Wo stelle ich Waschmaschine hin in Keller?</li><li>Hydrometer in Keller hängen um Feuchtigkeit zu sehen (<span class="etc-x" aria-label="geschwärzt">       </span>)</li><li>Einbaumöbel rausbauen und in Garage unterstellen (Unter Kartons o.ä. wg. Feuchtigkeit; Studis fragen)</li><li>01.09.26: Entwurf an Rohbauer (BRAUN-BAU) f. Angebot der Durchbrüche + Abbrucharbeiten (Tapeten, Holzdecke etc. am besten Abbrucharbeiten als Erstes)</li><li>Fragenkatalog an <span class="etc-x" aria-label="geschwärzt">       </span> f. Energieberater (Gas - Wärme pumpe Hybrid)</li><li>Förderungslandschaft klären (Einzelmaßnahmen wie Fenster förderfähig?)</li><li>Elektriker anfragen (macht <span class="etc-x" aria-label="geschwärzt">       </span>), dafür erst Entwurf fertig machen; Elektrik in Garage möglich?</li><li>Wie hoch kann eine Wand o.ä. in Ri. Nachbar f. Sichtschutz?</li></ul>
+<p>Wichtig als allererstes zu klären:</p>
+<p>https://www.staedteregion-aachen.de/de/navigation/aemter/amt-fuer-bauaufsicht-und-wohnraumfoerderung-a-63/untere-bauaufsicht-digitale-antragstellung</p>
+<p>Entwurf</p>
+<p>Thema Strom Garage (Elektro Sommer):</p>
+<ul><li>Gesamtsanierung Elektro ist von Nöten (unabhängig von Garage); Wann kann dann etw. in die Garage verlegt werden? Wann frühstmögl. Zeitpunkt?</li><li><span class="etc-x" aria-label="geschwärzt">       </span> will um jeden Preis zu allererst Strom in der Garage</li><li>Kabel wird durch Boden geführt von Garage, dann Aufputz hoch und irgendwie in Kellerraum zum Zähler (wird bisschen komplizierter)</li></ul>
+<p>Thema Unterteilung in 2 Wohneinheiten:</p>
+<ul><li>Baurechtlich Nutzungsänderung eigl. Bauantrag???</li></ul>
+<p>Thema Vordach:</p>
+<ul><li>Genehmigungsfrei: „Garagen einschließlich überdachter Stellplätze mit einer mittleren Wandhöhe bis zu 3 m und einer Brutto-Grundfläche bis zu insgesamt 30 m²“</li><li>Abstandsflächen: (6) Bei der Bemessung der Abstandsflächen bleiben außer Betracht</li></ul>
+<p>1. nicht mehr als 1,50 m vor die Außenwand vortretende Bauteile wie Gesimse und Dachüberstände,<br>2. Vorbauten, wenn sie<br>a) insgesamt nicht mehr als ein Drittel der Breite der jeweiligen Außenwand in Anspruch nehmen,<br>b) nicht mehr als 1,60 m vor diese Außenwand vortreten und<br>c) mindestens 2 m von der gegenüberliegenden Nachbargrenze entfernt bleiben</p>
+<p>Thema Mauer (Nennt man „Einfriedung“):</p>
+<ul><li>„In den Abstandsflächen eines Gebäudes sowie ohne eigene Abstandsfläche sind Stützmauern und geschlossene Einfriedungen außerhalb von Gewerbe- und Industriegebieten mit einer Höhe bis zu 2 m zulässig.“</li><li>Max. 2M Hoch, ggf. Nachbarn informieren, muss innerhalb unseres Grundstücks liegen.</li></ul>
+<p>Thema Rohre: -Heizung-Sanitär Angebote reinholen f. Sanierung der Rohre<br>Thema Dach:</p>
+<ul><li>Dachdecker kontaktieren, Zustand d. Daches klären</li></ul>
+<p>Thema Balkon:</p>
+<ul><li>Der Maler gegenüber meint, man müsse „den Balkon neu machen“ (Info v. <span class="etc-x" aria-label="geschwärzt">       </span>, ggf. Nachhaken)/ Sanieren - Maler ist „gesetzt“</li></ul>
+<p>EG:</p>
+<ul><li>Holzfenster + Holztüren (Deckenhoch mit Oberlicht?)</li><li>Badezimmer kriegt WC + neue Pfosten-Riegel Wand mit Oberlicht (Siehe Bartschers Ref.)</li><li>Eckfenster Bodentief</li><li>Küche &amp; Schlafzimmer Bodentiefe Fenster</li><li>Vordach Garten</li><li>TRH ist Gemeinschaftsfläche</li><li>Erschließung v. Osten</li><li>Vordach/Carport im Osten: Was ist hier möglich? Achtung!: Garage schon vorhanden, darf man überhaupt Vordach machen? Was wäre alternativ? Auffahrt?</li><li>Flur/Esszimmer bekommt durchgehendes Einbaumöbel, mit funky Farbe? Schöne Schreinerarbeit mit genug Stauraum?</li><li>Pfosten-Riegel-Fassade mit Oberlicht f. Großes Badezimmer</li><li>Eingangstür zu beiden Wohnungen planen</li><li>Variante mit Küche im Anbau? Was für eine Nutzung dann im anderen Raum?</li><li>Küche &amp; Schlafzimmer bekommen erhöhtes Holzdeck, darunter gekiest, gegenüber Wand mit Rankpflanzen</li></ul>
+<p>OG:</p>
+<ul><li>Einbauschrank in Schlafzimmer?</li><li>Alle Tapeten u. Oberflächen raus, neue Oberflächen rein, Wände weiß, Boden?</li><li>Badezimmer neue Fliesen</li><li>Küche angeschlossen an Badezimmer</li></ul>
+<p>To Do’s bis 01.09.26:</p>
+<ul><li>Vorentwurf fertig machen</li><li>Klären ob Verfahrensfrei (2. WE)</li><li>Zeitplan aufstellen mit Gewerken</li><li>Werkvertrag fertig machen</li><li>Studis organisieren, die Holzschrank raus räumen</li><li>Oberflächen abbrechen</li></ul></div><p class="etc-bez"><span class="etc-grau">Bilder</span> <a href="#b8" data-ziel="b8">Ortsbegehung Schrankwand</a></p></div></details></li></ol></section>
+<section class="etc-thema" data-thema="wissen" data-titel="wissen, normen"><h2>wissen, normen <span class="etc-grau">14</span></h2><ol><li id="e46" data-id="e46" data-such="anfrage rohbau w-a-004 anleitung wissen, normen art anleitung status ungeprüft"><details><summary><span class="etc-nr">w-a-004</span><span class="etc-ti">Anfrage Rohbau</span><span class="etc-typ">anleitung</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>anleitung</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e48" data-id="e48" data-such="anfrage statik w-a-005 anleitung wissen, normen art anleitung status ungeprüft"><details><summary><span class="etc-nr">w-a-005</span><span class="etc-ti">Anfrage Statik</span><span class="etc-typ">anleitung</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>anleitung</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e47" data-id="e47" data-such="anfrage shk w-a-006 anleitung wissen, normen art anleitung status ungeprüft"><details><summary><span class="etc-nr">w-a-006</span><span class="etc-ti">Anfrage SHK</span><span class="etc-typ">anleitung</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>anleitung</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e101" data-id="e101" data-such="meldung netzbetreiber w-a-007 anleitung wissen, normen art anleitung status teilweise geprüft"><details><summary><span class="etc-nr">w-a-007</span><span class="etc-ti">Meldung Netzbetreiber</span><span class="etc-typ">anleitung</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>anleitung</dd><dt>status</dt><dd>teilweise geprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e45" data-id="e45" data-such="anfrage bauamt w-a-008 anleitung wissen, normen art anleitung status geprüft"><details><summary><span class="etc-nr">w-a-008</span><span class="etc-ti">Anfrage Bauamt</span><span class="etc-typ">anleitung</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>anleitung</dd><dt>status</dt><dd>geprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e55" data-id="e55" data-such="bestandsaufnahme per 3d-scan w-a-009 werkzeug wissen, normen art werkzeug status ungeprüft"><details><summary><span class="etc-nr">w-a-009</span><span class="etc-ti">Bestandsaufnahme per 3D-Scan</span><span class="etc-typ">werkzeug</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>werkzeug</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e69" data-id="e69" data-such="fenstertausch ohne fassadendämmung w-a-013 anleitung wissen, normen art anleitung status ungeprüft"><details><summary><span class="etc-nr">w-a-013</span><span class="etc-ti">Fenstertausch ohne Fassadendämmung</span><span class="etc-typ">anleitung</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>anleitung</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e81" data-id="e81" data-such="hecken-schnittverbot w-n-001 norm wissen, normen art norm status korrigiert"><details><summary><span class="etc-nr">w-n-001</span><span class="etc-ti">Hecken-Schnittverbot</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>korrigiert</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e103" data-id="e103" data-such="nicht bauvorlageberechtigt w-n-002 norm wissen, normen art norm status teilweise geprüft"><details><summary><span class="etc-nr">w-n-002</span><span class="etc-ti">Nicht bauvorlageberechtigt</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>teilweise geprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e70" data-id="e70" data-such="förderung einzelmaßnahmen w-n-003 norm wissen, normen art norm status teilweise geprüft"><details><summary><span class="etc-nr">w-n-003</span><span class="etc-ti">Förderung Einzelmaßnahmen</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>teilweise geprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e121" data-id="e121" data-such="verfahrensfreie vorhaben nrw w-n-010 norm wissen, normen art norm status teilweise geprüft"><details><summary><span class="etc-nr">w-n-010</span><span class="etc-ti">Verfahrensfreie Vorhaben NRW</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>teilweise geprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e117" data-id="e117" data-such="u-werte bei sanierung w-n-011 norm wissen, normen art norm status teilweise geprüft"><details><summary><span class="etc-nr">w-n-011</span><span class="etc-ti">U-Werte bei Sanierung</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>teilweise geprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e54" data-id="e54" data-such="berufsbezeichnung architekt w-n-012 norm wissen, normen art norm status ungeprüft"><details><summary><span class="etc-nr">w-n-012</span><span class="etc-ti">Berufsbezeichnung Architekt</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li><li id="e110" data-id="e110" data-such="schadstoffe vor rückbau w-n-014 norm wissen, normen art norm status ungeprüft"><details><summary><span class="etc-nr">w-n-014</span><span class="etc-ti">Schadstoffe vor Rückbau</span><span class="etc-typ">norm</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>ungeprüft</dd></dl><p class="etc-grau">Der Text erscheint, sobald der Eintrag bestätigt ist.</p></div></details></li></ol></section>
+<section class="etc-thema" data-thema="referenzen" data-titel="referenzen"><h2>referenzen <span class="etc-grau">20</span></h2><ol><li id="e77" data-id="e77" data-such="haus moosweg – felippi wyssen s-b-001 2026-08-24 bauwerk referenzen autor felippi wyssen architekten jahr 2019 quelle world-architects.com thema/vordach thema/holzdeck material/holz vordach holzdeck holz"><details><summary><span class="etc-nr">s-b-001</span><span class="etc-ti">Haus Moosweg – Felippi Wyssen</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Felippi Wyssen Architekten</dd><dt>jahr</dt><dd>2019</dd><dt>quelle</dt><dd><a href="https://world-architects.com/de/felippi-wyssen-basel/project/haus-moosweg" target="_blank" rel="noopener">world-architects.com</a></dd><dt>tags</dt><dd>thema/vordach thema/holzdeck material/holz</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e78" data-id="e78" data-such="haus palm – weyell zipse s-b-002 2026-08-21 bauwerk referenzen autor weyell zipse architekten fotograf simon menges thema/einbaumöbel thema/flur material/holz farbe/weiß einbaumöbel flur holz weiß"><details><summary><span class="etc-nr">s-b-002</span><span class="etc-ti">Haus Palm – Weyell Zipse</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Weyell Zipse Architekten</dd><dt>fotograf</dt><dd>Simon Menges</dd><dt>tags</dt><dd>thema/einbaumöbel thema/flur material/holz farbe/weiß</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e64" data-id="e64" data-such="efh cesana – felippi wyssen s-b-003 2026-08-24 bauwerk referenzen autor felippi wyssen architekten thema/anbau thema/holzdeck thema/fenster anbau holzdeck fenster"><details><summary><span class="etc-nr">s-b-003</span><span class="etc-ti">EFH Cesana – Felippi Wyssen</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Felippi Wyssen Architekten</dd><dt>tags</dt><dd>thema/anbau thema/holzdeck thema/fenster</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e112" data-id="e112" data-such="schlossbergstrasse muttenz – felippi wyssen s-b-005 2026-08-24 bauwerk referenzen autor felippi wyssen architekten thema/eingang thema/vordach material/metall farbe/grau eingang vordach metall grau"><details><summary><span class="etc-nr">s-b-005</span><span class="etc-ti">Schlossbergstrasse Muttenz – Felippi Wyssen</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Felippi Wyssen Architekten</dd><dt>tags</dt><dd>thema/eingang thema/vordach material/metall farbe/grau</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e114" data-id="e114" data-such="schreber house – amunt s-b-007 2026-08-21 bauwerk referenzen autor amunt fotograf filip dujardin jahr 2012 ort aachen quelle thisispaper.com thema/anbau thema/holzdeck thema/fenster material/holz material/klinker anbau holzdeck fenster holz klinker"><details><summary><span class="etc-nr">s-b-007</span><span class="etc-ti">Schreber House – AMUNT</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>AMUNT</dd><dt>fotograf</dt><dd>Filip Dujardin</dd><dt>jahr</dt><dd>2012</dd><dt>ort</dt><dd>Aachen</dd><dt>quelle</dt><dd><a href="https://thisispaper.com/mag/schreber-house-amunt" target="_blank" rel="noopener">thisispaper.com</a></dd><dt>tags</dt><dd>thema/anbau thema/holzdeck thema/fenster material/holz material/klinker</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e88" data-id="e88" data-such="house e – saett s-b-009 2026-08-21 bauwerk referenzen autor saett (?) thema/küche thema/boden farbe/gelb küche boden gelb"><details><summary><span class="etc-nr">s-b-009</span><span class="etc-ti">House E – saett</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>saett (?)</dd><dt>tags</dt><dd>thema/küche thema/boden farbe/gelb</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e116" data-id="e116" data-such="tischbeinstraße 166 s-b-011 2026-08-24 bauwerk referenzen autor voigt architekten thema/durchbruch thema/stütze material/holz durchbruch stütze holz"><details><summary><span class="etc-nr">s-b-011</span><span class="etc-ti">Tischbeinstraße 166</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Voigt Architekten</dd><dt>tags</dt><dd>thema/durchbruch thema/stütze material/holz</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e125" data-id="e125" data-such="lan – kessler plescher s-b-014 2026-08-21 bauwerk referenzen autor kessler plescher architekten fotograf marie kreibich thema/einbaumöbel farbe/dunkel einbaumöbel dunkel"><details><summary><span class="etc-nr">s-b-014</span><span class="etc-ti">lan – Kessler Plescher</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Kessler Plescher Architekten</dd><dt>fotograf</dt><dd>Marie Kreibich</dd><dt>tags</dt><dd>thema/einbaumöbel farbe/dunkel</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e126" data-id="e126" data-such="pem – kessler plescher s-b-015 2026-08-21 bauwerk referenzen autor kessler plescher architekten fotograf marie kreibich thema/einbaumöbel thema/bad material/parkett material/holz einbaumöbel bad parkett holz"><details><summary><span class="etc-nr">s-b-015</span><span class="etc-ti">pem – Kessler Plescher</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Kessler Plescher Architekten</dd><dt>fotograf</dt><dd>Marie Kreibich</dd><dt>tags</dt><dd>thema/einbaumöbel thema/bad material/parkett material/holz</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e82" data-id="e82" data-such="heckhausen – wws s-b-016 2026-08-24 bauwerk referenzen autor wws (?) thema/eingang thema/vordach material/metall eingang vordach metall"><details><summary><span class="etc-nr">s-b-016</span><span class="etc-ti">Heckhausen – wws</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>wws (?)</dd><dt>tags</dt><dd>thema/eingang thema/vordach material/metall</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e79" data-id="e79" data-such="haus ruppen s-b-030 2026-08-24 bauwerk referenzen autor felippi wyssen architekten thema/einfriedung thema/patio material/sichtbeton material/kies material/holz einfriedung patio sichtbeton kies holz"><details><summary><span class="etc-nr">s-b-030</span><span class="etc-ti">Haus Ruppen</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Felippi Wyssen Architekten</dd><dt>tags</dt><dd>thema/einfriedung thema/patio material/sichtbeton material/kies material/holz</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e80" data-id="e80" data-such="haus weinhagweg s-b-031 2026-08-24 bauwerk referenzen autor felippi wyssen architekten thema/treppe farbe/weiß treppe weiß"><details><summary><span class="etc-nr">s-b-031</span><span class="etc-ti">Haus Weinhagweg</span><span class="etc-typ">bauwerk</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Felippi Wyssen Architekten</dd><dt>tags</dt><dd>thema/treppe farbe/weiß</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e85" data-id="e85" data-such="holzbalkendecke und glasfront 0d7e s-f-004 2026-08-25 fundstück referenzen autor unbekannt thema/fenster material/holz material/mauerwerk fenster holz mauerwerk"><details><summary><span class="etc-nr">s-f-004</span><span class="etc-ti">Holzbalkendecke und Glasfront 0d7e</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/fenster material/holz material/mauerwerk</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e73" data-id="e73" data-such="giebelhaus mit breitem fenster 4887 s-f-006 2026-08-25 fundstück referenzen autor unbekannt thema/fenster thema/fassade fenster fassade"><details><summary><span class="etc-nr">s-f-006</span><span class="etc-ti">Giebelhaus mit breitem Fenster 4887</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/fenster thema/fassade</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e100" data-id="e100" data-such="markisen am flachbau htm s-f-008 2026-08-24 fundstück referenzen autor unbekannt thema/sonnenschutz thema/anbau sonnenschutz anbau"><details><summary><span class="etc-nr">s-f-008</span><span class="etc-ti">Markisen am Flachbau HTM</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/sonnenschutz thema/anbau</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e97" data-id="e97" data-such="küche fichte, rote fliesen srp s-f-010 2026-08-21 fundstück referenzen autor unbekannt thema/küche thema/einbaumöbel material/holz farbe/rot küche einbaumöbel holz rot"><details><summary><span class="etc-nr">s-f-010</span><span class="etc-ti">Küche Fichte, rote Fliesen SRP</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/küche thema/einbaumöbel material/holz farbe/rot</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e105" data-id="e105" data-such="pavillon mit wellblechdach s-f-012 2026-08-24 fundstück referenzen autor unbekannt thema/anbau material/metall material/klinker anbau metall klinker"><details><summary><span class="etc-nr">s-f-012</span><span class="etc-ti">Pavillon mit Wellblechdach</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/anbau material/metall material/klinker</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e86" data-id="e86" data-such="holzbalkendecke, weißer raum s-f-013 2026-08-24 fundstück referenzen autor unbekannt thema/fenster material/holz farbe/weiß fenster holz weiß"><details><summary><span class="etc-nr">s-f-013</span><span class="etc-ti">Holzbalkendecke, weißer Raum</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/fenster material/holz farbe/weiß</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e51" data-id="e51" data-such="bad mit holzfenster 025-i-14 s-f-017 2026-08-31 fundstück referenzen autor unbekannt thema/bad material/fliesen material/holz bad fliesen holz"><details><summary><span class="etc-nr">s-f-017</span><span class="etc-ti">Bad mit Holzfenster 025-I-14</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>unbekannt</dd><dt>tags</dt><dd>thema/bad material/fliesen material/holz</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e49" data-id="e49" data-such="ansicht anbau s-f-032 2026-08-24 fundstück referenzen autor felippi wyssen architekten thema/anbau thema/holzdeck thema/fenster material/holz anbau holzdeck fenster holz"><details><summary><span class="etc-nr">s-f-032</span><span class="etc-ti">Ansicht Anbau</span><span class="etc-typ">fundstück</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>autor</dt><dd>Felippi Wyssen Architekten</dd><dt>tags</dt><dd>thema/anbau thema/holzdeck thema/fenster material/holz</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li></ol></section>
+<section class="etc-thema" data-thema="ressourcen" data-titel="ressourcen"><h2>ressourcen <span class="etc-grau">5</span></h2><ol><li id="e113" data-id="e113" data-such="schrankwand bestand r-a-001 bauteil ressourcen zustand wird wiederverwendet thema/wiederverwendung wiederverwendung"><details><summary><span class="etc-nr">r-a-001</span><span class="etc-ti">Schrankwand Bestand</span><span class="etc-typ">bauteil</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>zustand</dt><dd>wird wiederverwendet</dd><dt>tags</dt><dd>thema/wiederverwendung</dd></dl><p class="etc-grau">Noch kein Text.</p><p class="etc-bez"><span class="etc-grau">Bilder</span> <a href="#b1" data-ziel="b1">Arbeit an der Schrankwand</a></p></div></details></li><li id="e65" data-id="e65" data-such="einbaumöbel og r-a-002 bauteil ressourcen zustand wird ausgebaut, in der garage zwischengelagert thema/wiederverwendung wiederverwendung"><details><summary><span class="etc-nr">r-a-002</span><span class="etc-ti">Einbaumöbel OG</span><span class="etc-typ">bauteil</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>zustand</dt><dd>wird ausgebaut, in der Garage zwischengelagert</dd><dt>tags</dt><dd>thema/wiederverwendung</dd></dl><p class="etc-grau">Noch kein Text.</p><p class="etc-bez"><span class="etc-grau">Bilder</span> <a href="#b3" data-ziel="b3">Bestand OG Einbaumöbel</a></p></div></details></li><li id="e108" data-id="e108" data-such="rote platte garage r-a-003 vorgefunden ressourcen"><details><summary><span class="etc-nr">r-a-003</span><span class="etc-ti">Rote Platte Garage</span><span class="etc-typ">vorgefunden</span></summary><div class="etc-auf"><p class="etc-grau">Noch kein Text.</p><p class="etc-bez"><span class="etc-grau">Bilder</span> <a href="#b7" data-ziel="b7">Vorgefunden rote Platte Garage</a></p></div></details></li><li id="e72" data-id="e72" data-such="gartengeräte r-a-004 vorgefunden ressourcen"><details><summary><span class="etc-nr">r-a-004</span><span class="etc-ti">Gartengeräte</span><span class="etc-typ">vorgefunden</span></summary><div class="etc-auf"><p class="etc-grau">Noch kein Text.</p><p class="etc-bez"><span class="etc-grau">Bilder</span> <a href="#b6" data-ziel="b6">Vorgefunden Gartengeräte</a></p></div></details></li><li id="e56" data-id="e56" data-such="bims-hohlblock r-a-005 material ressourcen zustand bestand, ursprungsbau 1953 maße 30 cm wandstärke (laut baubeschreibung) material/bims bims"><details><summary><span class="etc-nr">r-a-005</span><span class="etc-ti">Bims-Hohlblock</span><span class="etc-typ">material</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>zustand</dt><dd>Bestand, Ursprungsbau 1953</dd><dt>maße</dt><dd>30 cm Wandstärke (laut Baubeschreibung)</dd><dt>tags</dt><dd>material/bims</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li></ol></section>
+<section class="etc-thema" data-thema="werkzeuge" data-titel="werkzeuge"><h2>werkzeuge <span class="etc-grau">2</span></h2><ol><li id="e106" data-id="e106" data-such="polycam t-d-001 digital werkzeuge wofür 3d-scan im bestand"><details><summary><span class="etc-nr">t-d-001</span><span class="etc-ti">Polycam</span><span class="etc-typ">digital</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>wofür</dt><dd>3D-Scan im Bestand</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li><li id="e57" data-id="e57" data-such="blender t-d-002 digital werkzeuge wofür scan weiterverarbeiten, visualisierung"><details><summary><span class="etc-nr">t-d-002</span><span class="etc-ti">Blender</span><span class="etc-typ">digital</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>wofür</dt><dd>Scan weiterverarbeiten, Visualisierung</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li></ol></section>
+<section class="etc-thema" data-thema="orte" data-titel="orte"><h2>orte <span class="etc-grau">1</span></h2><ol><li id="e96" data-id="e96" data-such="kornelimünster o-s-001 stadtteil orte lage aachen"><details><summary><span class="etc-nr">o-s-001</span><span class="etc-ti">Kornelimünster</span><span class="etc-typ">stadtteil</span></summary><div class="etc-auf"><dl class="etc-dl"><dt>lage</dt><dd>Aachen</dd></dl><p class="etc-grau">Noch kein Text.</p></div></details></li></ol></section>
+<section class="etc-thema" data-thema="bilder" data-titel="bilder"><h2>bilder <span class="etc-grau">13</span></h2><ol><li id="b9" data-id="b9" data-such="skizze konzept 2026-08-21 bild bilder foto"><details><summary><span class="etc-nr">2026-08-21</span><span class="etc-ti">Skizze Konzept</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-08-21-skizze-konzept.jpg" width="1600" height="1350" alt="Skizze Konzept" loading="lazy"></figure></div></details></li><li id="b10" data-id="b10" data-such="verlaufsserie 001–015 2026-08-21 bild bilder foto"><details><summary><span class="etc-nr">2026-08-21</span><span class="etc-ti">Verlaufsserie 001–015</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-08-21-verlaufsserie-001015.jpg" width="1600" height="678" alt="Verlaufsserie 001–015" loading="lazy"></figure></div></details></li><li id="b11" data-id="b11" data-such="visualisierung k02 v1 2026-08-21 bild bilder foto"><details><summary><span class="etc-nr">2026-08-21</span><span class="etc-ti">Visualisierung K02 V1</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-08-21-visualisierung-k02-v1.jpg" width="1600" height="1200" alt="Visualisierung K02 V1" loading="lazy"></figure></div></details></li><li id="b12" data-id="b12" data-such="visualisierung k04 v1.1 2026-08-21 bild bilder foto"><details><summary><span class="etc-nr">2026-08-21</span><span class="etc-ti">Visualisierung K04 V1.1</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-08-21-visualisierung-k04-v1-1.jpg" width="1600" height="1200" alt="Visualisierung K04 V1.1" loading="lazy"></figure></div></details></li><li id="b13" data-id="b13" data-such="visualisierungen k01–k04 2026-08-21 bild bilder foto"><details><summary><span class="etc-nr">2026-08-21</span><span class="etc-ti">Visualisierungen K01–K04</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-08-21-visualisierungen-k01k04.jpg" width="1600" height="479" alt="Visualisierungen K01–K04" loading="lazy"></figure></div></details></li><li id="b8" data-id="b8" data-such="ortsbegehung schrankwand 2026-07-31 bild bilder foto"><details><summary><span class="etc-nr">2026-07-31</span><span class="etc-ti">Ortsbegehung Schrankwand</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-31-ortsbegehung-schrankwand.jpg" width="1600" height="1200" alt="Ortsbegehung Schrankwand" loading="lazy"></figure><p class="etc-bez"><span class="etc-grau">Text</span> <a href="#e8" data-ziel="e8">Ortsbegehung</a></p></div></details></li><li id="b1" data-id="b1" data-such="arbeit an der schrankwand 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Arbeit an der Schrankwand</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-arbeit-an-der-schrankwand.jpg" width="1067" height="1600" alt="Arbeit an der Schrankwand" loading="lazy"></figure></div></details></li><li id="b2" data-id="b2" data-such="aufmaß pläne am fenster 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Aufmaß Pläne am Fenster</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-aufma-plane-am-fenster.jpg" width="1067" height="1600" alt="Aufmaß Pläne am Fenster" loading="lazy"></figure></div></details></li><li id="b3" data-id="b3" data-such="bestand og einbaumöbel 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Bestand OG Einbaumöbel</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-bestand-og-einbaumobel.jpg" width="1067" height="1600" alt="Bestand OG Einbaumöbel" loading="lazy"></figure></div></details></li><li id="b4" data-id="b4" data-such="bestand wohnzimmer 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Bestand Wohnzimmer</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-bestand-wohnzimmer.jpg" width="1600" height="1067" alt="Bestand Wohnzimmer" loading="lazy"></figure></div></details></li><li id="b5" data-id="b5" data-such="scan grundriss 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Scan Grundriss</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-scan-grundriss.jpg" width="1019" height="1528" alt="Scan Grundriss" loading="lazy"></figure></div></details></li><li id="b6" data-id="b6" data-such="vorgefunden gartengeräte 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Vorgefunden Gartengeräte</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-vorgefunden-gartengerate.jpg" width="1067" height="1600" alt="Vorgefunden Gartengeräte" loading="lazy"></figure></div></details></li><li id="b7" data-id="b7" data-such="vorgefunden rote platte garage 2026-07-03 bild bilder foto"><details><summary><span class="etc-nr">2026-07-03</span><span class="etc-ti">Vorgefunden rote Platte Garage</span><span class="etc-typ">bild</span></summary><div class="etc-auf"><figure><img src="img/aachen-2026-07-03-vorgefunden-rote-platte-garage.jpg" width="1600" height="1067" alt="Vorgefunden rote Platte Garage" loading="lazy"></figure></div></details></li></ol></section>
+<section class="etc-thema" data-thema="projekt" data-titel="projekt"><h2>projekt <span class="etc-grau">1</span></h2><ol><li id="e124" data-id="e124" data-such="aachen 2026-05-12 2026-05-12 umbau projekt"><details><summary><span class="etc-nr">2026-05-12</span><span class="etc-ti">Aachen</span><span class="etc-typ">umbau</span></summary><div class="etc-auf"><div class="etc-text"><p>Umbau, Modernisierung und Instandsetzung eines Einfamilienhauses, Unterteilung in zwei Wohneinheiten (EG Bauherrin, OG Einliegerwohnung).<br><span class="etc-x" aria-label="geschwärzt">             </span>, <span class="etc-x" aria-label="geschwärzt">     </span> Aachen-Kornelimünster · <span class="etc-x" aria-label="geschwärzt">         </span> · Gebäudeklasse 2 · Baujahr 1953, Anbau ca. 1960–65<br>Planer: un/build GbR (Jonathan Burkard, Christian Sternhagen)<br>Rahmen laut Vertrag: <span class="etc-x" aria-label="geschwärzt">         </span> brutto inkl. Architektenleistungen · Ziel bezugsfertig: 25.06.2027 (Terminplan)<br>Stand 26.10.2026: Ausführungsplanung</p>
+<h3>Bestand und Haltung</h3>
+<ul><li>„Möglichst wenig Eingriffe, die den Charakter des Bestands nicht verändern“ (<a href="#e21" data-ziel="e21">2026-09-16 Bauamt</a>)</li><li>bestehende Schrankwand wird wiederverwendet; Einbaumöbel werden ausgebaut und in der Garage zwischengelagert; Badspiegel ggf. erhalten</li></ul></div></div></details></li></ol></section>
+</div>
+</div>
+<script type="application/json" id="etc-graph-daten">{"nodes": [["e8", "Ortsbegehung", "texte", "2026-07-31"], ["e13", "Besprechung", "texte", "2026-08-25"], ["e21", "Bauamt", "texte", "2026-09-16"], ["e22", "Rohbau und SHK", "texte", "2026-09-18"], ["e23", "Anpassungen Werkvertrag", "texte", "2026-09-19"], ["e35", "Bauherrin", "texte", "2026-10-22"], ["e36", "Energieberatung", "texte", "2026-10-22"], ["e45", "Anfrage Bauamt", "wissen", "w-a-008"], ["e46", "Anfrage Rohbau", "wissen", "w-a-004"], ["e47", "Anfrage SHK", "wissen", "w-a-006"], ["e48", "Anfrage Statik", "wissen", "w-a-005"], ["e49", "Ansicht Anbau", "referenzen", "s-f-032"], ["e51", "Bad mit Holzfenster 025-I-14", "referenzen", "s-f-017"], ["e54", "Berufsbezeichnung Architekt", "wissen", "w-n-012"], ["e55", "Bestandsaufnahme per 3D-Scan", "wissen", "w-a-009"], ["e56", "Bims-Hohlblock", "ressourcen", "r-a-005"], ["e57", "Blender", "werkzeuge", "t-d-002"], ["e64", "EFH Cesana – Felippi Wyssen", "referenzen", "s-b-003"], ["e65", "Einbaumöbel OG", "ressourcen", "r-a-002"], ["e69", "Fenstertausch ohne Fassadendämmung", "wissen", "w-a-013"], ["e70", "Förderung Einzelmaßnahmen", "wissen", "w-n-003"], ["e72", "Gartengeräte", "ressourcen", "r-a-004"], ["e73", "Giebelhaus mit breitem Fenster 4887", "referenzen", "s-f-006"], ["e77", "Haus Moosweg – Felippi Wyssen", "referenzen", "s-b-001"], ["e78", "Haus Palm – Weyell Zipse", "referenzen", "s-b-002"], ["e79", "Haus Ruppen", "referenzen", "s-b-030"], ["e80", "Haus Weinhagweg", "referenzen", "s-b-031"], ["e81", "Hecken-Schnittverbot", "wissen", "w-n-001"], ["e82", "Heckhausen – wws", "referenzen", "s-b-016"], ["e85", "Holzbalkendecke und Glasfront 0d7e", "referenzen", "s-f-004"], ["e86", "Holzbalkendecke, weißer Raum", "referenzen", "s-f-013"], ["e88", "House E – saett", "referenzen", "s-b-009"], ["e96", "Kornelimünster", "orte", "o-s-001"], ["e97", "Küche Fichte, rote Fliesen SRP", "referenzen", "s-f-010"], ["e100", "Markisen am Flachbau HTM", "referenzen", "s-f-008"], ["e101", "Meldung Netzbetreiber", "wissen", "w-a-007"], ["e103", "Nicht bauvorlageberechtigt", "wissen", "w-n-002"], ["e105", "Pavillon mit Wellblechdach", "referenzen", "s-f-012"], ["e106", "Polycam", "werkzeuge", "t-d-001"], ["e108", "Rote Platte Garage", "ressourcen", "r-a-003"], ["e110", "Schadstoffe vor Rückbau", "wissen", "w-n-014"], ["e112", "Schlossbergstrasse Muttenz – Felippi Wyssen", "referenzen", "s-b-005"], ["e113", "Schrankwand Bestand", "ressourcen", "r-a-001"], ["e114", "Schreber House – AMUNT", "referenzen", "s-b-007"], ["e116", "Tischbeinstraße 166", "referenzen", "s-b-011"], ["e117", "U-Werte bei Sanierung", "wissen", "w-n-011"], ["e121", "Verfahrensfreie Vorhaben NRW", "wissen", "w-n-010"], ["e124", "Aachen", "projekt", "2026-05-12"], ["e125", "lan – Kessler Plescher", "referenzen", "s-b-014"], ["e126", "pem – Kessler Plescher", "referenzen", "s-b-015"], ["b1", "Arbeit an der Schrankwand", "bilder", "2026-07-03"], ["b2", "Aufmaß Pläne am Fenster", "bilder", "2026-07-03"], ["b3", "Bestand OG Einbaumöbel", "bilder", "2026-07-03"], ["b4", "Bestand Wohnzimmer", "bilder", "2026-07-03"], ["b5", "Scan Grundriss", "bilder", "2026-07-03"], ["b6", "Vorgefunden Gartengeräte", "bilder", "2026-07-03"], ["b7", "Vorgefunden rote Platte Garage", "bilder", "2026-07-03"], ["b8", "Ortsbegehung Schrankwand", "bilder", "2026-07-31"], ["b9", "Skizze Konzept", "bilder", "2026-08-21"], ["b10", "Verlaufsserie 001–015", "bilder", "2026-08-21"], ["b11", "Visualisierung K02 V1", "bilder", "2026-08-21"], ["b12", "Visualisierung K04 V1.1", "bilder", "2026-08-21"], ["b13", "Visualisierungen K01–K04", "bilder", "2026-08-21"], ["tag:thema/anbau", "#anbau", "tag", "thema/anbau"], ["tag:thema/holzdeck", "#holzdeck", "tag", "thema/holzdeck"], ["tag:thema/fenster", "#fenster", "tag", "thema/fenster"], ["tag:material/holz", "#holz", "tag", "material/holz"], ["tag:thema/bad", "#bad", "tag", "thema/bad"], ["tag:material/fliesen", "#fliesen", "tag", "material/fliesen"], ["tag:material/bims", "#bims", "tag", "material/bims"], ["tag:thema/wiederverwendung", "#wiederverwendung", "tag", "thema/wiederverwendung"], ["tag:thema/fassade", "#fassade", "tag", "thema/fassade"], ["tag:thema/vordach", "#vordach", "tag", "thema/vordach"], ["tag:thema/einbaumöbel", "#einbaumöbel", "tag", "thema/einbaumöbel"], ["tag:thema/flur", "#flur", "tag", "thema/flur"], ["tag:farbe/weiß", "#weiß", "tag", "farbe/weiß"], ["tag:thema/einfriedung", "#einfriedung", "tag", "thema/einfriedung"], ["tag:thema/patio", "#patio", "tag", "thema/patio"], ["tag:material/sichtbeton", "#sichtbeton", "tag", "material/sichtbeton"], ["tag:material/kies", "#kies", "tag", "material/kies"], ["tag:thema/treppe", "#treppe", "tag", "thema/treppe"], ["tag:thema/eingang", "#eingang", "tag", "thema/eingang"], ["tag:material/metall", "#metall", "tag", "material/metall"], ["tag:material/mauerwerk", "#mauerwerk", "tag", "material/mauerwerk"], ["tag:thema/küche", "#küche", "tag", "thema/küche"], ["tag:thema/boden", "#boden", "tag", "thema/boden"], ["tag:farbe/gelb", "#gelb", "tag", "farbe/gelb"], ["tag:farbe/rot", "#rot", "tag", "farbe/rot"], ["tag:thema/sonnenschutz", "#sonnenschutz", "tag", "thema/sonnenschutz"], ["tag:material/klinker", "#klinker", "tag", "material/klinker"], ["tag:farbe/grau", "#grau", "tag", "farbe/grau"], ["tag:thema/durchbruch", "#durchbruch", "tag", "thema/durchbruch"], ["tag:thema/stütze", "#stütze", "tag", "thema/stütze"], ["tag:farbe/dunkel", "#dunkel", "tag", "farbe/dunkel"], ["tag:material/parkett", "#parkett", "tag", "material/parkett"]], "edges": [["b1", "e113"], ["b3", "e65"], ["b6", "e72"], ["b7", "e108"], ["b8", "e8"], ["e100", "e124"], ["e100", "tag:thema/anbau"], ["e100", "tag:thema/sonnenschutz"], ["e101", "e124"], ["e101", "e22"], ["e103", "e121"], ["e103", "e124"], ["e103", "e23"], ["e103", "e54"], ["e105", "e124"], ["e105", "tag:material/klinker"], ["e105", "tag:material/metall"], ["e105", "tag:thema/anbau"], ["e106", "e124"], ["e106", "e55"], ["e106", "e57"], ["e108", "e124"], ["e110", "e124"], ["e110", "e35"], ["e112", "e124"], ["e112", "tag:farbe/grau"], ["e112", "tag:material/metall"], ["e112", "tag:thema/eingang"], ["e112", "tag:thema/vordach"], ["e113", "e124"], ["e113", "e35"], ["e113", "e8"], ["e113", "tag:thema/wiederverwendung"], ["e114", "e124"], ["e114", "tag:material/holz"], ["e114", "tag:material/klinker"], ["e114", "tag:thema/anbau"], ["e114", "tag:thema/fenster"], ["e114", "tag:thema/holzdeck"], ["e116", "e124"], ["e116", "tag:material/holz"], ["e116", "tag:thema/durchbruch"], ["e116", "tag:thema/stütze"], ["e117", "e124"], ["e117", "e36"], ["e117", "e56"], ["e117", "e69"], ["e117", "e70"], ["e121", "e124"], ["e121", "e21"], ["e121", "e48"], ["e121", "e8"], ["e124", "e125"], ["e124", "e126"], ["e124", "e13"], ["e124", "e21"], ["e124", "e22"], ["e124", "e23"], ["e124", "e35"], ["e124", "e36"], ["e124", "e45"], ["e124", "e46"], ["e124", "e47"], ["e124", "e48"], ["e124", "e49"], ["e124", "e51"], ["e124", "e54"], ["e124", "e55"], ["e124", "e56"], ["e124", "e57"], ["e124", "e64"], ["e124", "e65"], ["e124", "e69"], ["e124", "e70"], ["e124", "e72"], ["e124", "e73"], ["e124", "e77"], ["e124", "e78"], ["e124", "e79"], ["e124", "e8"], ["e124", "e80"], ["e124", "e81"], ["e124", "e82"], ["e124", "e85"], ["e124", "e86"], ["e124", "e88"], ["e124", "e96"], ["e124", "e97"], ["e125", "tag:farbe/dunkel"], ["e125", "tag:thema/einbaumöbel"], ["e126", "e35"], ["e126", "tag:material/holz"], ["e126", "tag:material/parkett"], ["e126", "tag:thema/bad"], ["e126", "tag:thema/einbaumöbel"], ["e21", "e45"], ["e21", "e48"], ["e21", "e81"], ["e21", "e96"], ["e22", "e46"], ["e22", "e47"], ["e35", "e36"], ["e35", "e56"], ["e36", "e47"], ["e36", "e69"], ["e36", "e70"], ["e48", "e8"], ["e49", "tag:material/holz"], ["e49", "tag:thema/anbau"], ["e49", "tag:thema/fenster"], ["e49", "tag:thema/holzdeck"], ["e51", "tag:material/fliesen"], ["e51", "tag:material/holz"], ["e51", "tag:thema/bad"], ["e55", "e57"], ["e56", "e69"], ["e56", "tag:material/bims"], ["e64", "tag:thema/anbau"], ["e64", "tag:thema/fenster"], ["e64", "tag:thema/holzdeck"], ["e65", "e8"], ["e65", "tag:thema/wiederverwendung"], ["e73", "tag:thema/fassade"], ["e73", "tag:thema/fenster"], ["e77", "tag:material/holz"], ["e77", "tag:thema/holzdeck"], ["e77", "tag:thema/vordach"], ["e78", "e8"], ["e78", "tag:farbe/weiß"], ["e78", "tag:material/holz"], ["e78", "tag:thema/einbaumöbel"], ["e78", "tag:thema/flur"], ["e79", "tag:material/holz"], ["e79", "tag:material/kies"], ["e79", "tag:material/sichtbeton"], ["e79", "tag:thema/einfriedung"], ["e79", "tag:thema/patio"], ["e80", "tag:farbe/weiß"], ["e80", "tag:thema/treppe"], ["e82", "tag:material/metall"], ["e82", "tag:thema/eingang"], ["e82", "tag:thema/vordach"], ["e85", "tag:material/holz"], ["e85", "tag:material/mauerwerk"], ["e85", "tag:thema/fenster"], ["e86", "tag:farbe/weiß"], ["e86", "tag:material/holz"], ["e86", "tag:thema/fenster"], ["e88", "tag:farbe/gelb"], ["e88", "tag:thema/boden"], ["e88", "tag:thema/küche"], ["e97", "tag:farbe/rot"], ["e97", "tag:material/holz"], ["e97", "tag:thema/einbaumöbel"], ["e97", "tag:thema/küche"]], "titel": {"texte": "texte", "wissen": "wissen, normen", "referenzen": "referenzen", "ressourcen": "ressourcen", "werkzeuge": "werkzeuge", "orte": "orte", "bilder": "bilder", "projekt": "projekt", "tag": "Tag"}}</script>
+<script>
+(function () {
+  var root = document.getElementById('etc');
+  if (!root || root.getAttribute('data-bereit')) return;
+  root.setAttribute('data-bereit', '1');
+  var quelle = root.querySelector('.etc-quelle');
+  var themen = {}, reihe = [];
+  var secs = quelle.querySelectorAll('.etc-thema');
+  for (var i = 0; i < secs.length; i++) {
+    themen[secs[i].getAttribute('data-thema')] = secs[i];
+    reihe.push(secs[i].getAttribute('data-thema'));
+  }
+  function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  /* Aufbau: links oben Liste, links unten Graph, rechts die Tafel */
+  var buehne = el('div', 'etc-buehne');
+  var links = el('div', 'etc-links');
+  var liste = el('div', 'etc-liste-bereich');
+  var kopf = el('div', 'etc-kopf');
+  /* eigenes Menü: klappt dort auf, wo es liegt, nach unten */
+  var wahlKnopf = el('button', 'etc-wahl-knopf'); wahlKnopf.type = 'button';
+  var wahlListe = el('div', 'etc-wahl-liste'); wahlListe.hidden = true;
+  [['etcetera', [['ueber', 'über'], ['index', 'index'], ['graph', 'graph']]],
+   ['Themen', reihe.filter(function (k) { return k !== 'ueber'; }).map(function (k) { return [k, themen[k].getAttribute('data-titel')]; })]
+  ].forEach(function (gr, gi) {
+    if (gi > 0) wahlListe.appendChild(el('div', 'etc-wahl-trenner'));
+    gr[1].forEach(function (o) { var b = el('button', 'etc-wahl-punkt', o[1]); b.type = 'button'; b.setAttribute('data-wert', o[0]); wahlListe.appendChild(b); });
+  });
+  wahlListe.appendChild(el('div', 'etc-wahl-trenner'));
+  var suchPunkt = el('button', 'etc-wahl-punkt', 'suchen'); suchPunkt.type = 'button'; suchPunkt.setAttribute('data-wert', '__suche');
+  wahlListe.appendChild(suchPunkt);
+  var sucheFeld = el('input', 'etc-suche-kopf'); sucheFeld.type = 'search'; sucheFeld.placeholder = 'suchen'; sucheFeld.setAttribute('aria-label', 'suchen'); sucheFeld.hidden = true;
+  var vorEl = el('div', 'etc-vorschlag-box'), vorDaten = []; vorEl.hidden = true;
+  try { vorDaten = JSON.parse(quelle.querySelector('.etc-vorschlaege').getAttribute('data-v')); } catch (e) { vorDaten = []; }
+  vorDaten.forEach(function (w) { var b2 = el('button', 'etc-vorschlag', w); b2.type = 'button'; b2.setAttribute('data-vorschlag', w); vorEl.appendChild(b2); });
+  kopf.appendChild(sucheFeld); kopf.appendChild(vorEl);
+  kopf.appendChild(wahlKnopf); kopf.appendChild(wahlListe);
+  function suche(q) {
+    q = (q || '').trim().toLowerCase();
+    if (!q) { waehle('index'); return; }
+    zeigeListe('index');
+    wahlKnopf.textContent = 'suche: ' + q;
+    var alle = wahlListe.querySelectorAll('.etc-wahl-punkt');
+    for (var j = 0; j < alle.length; j++) alle[j].classList.remove('etc-aktiv');
+    var worte = q.split(/\s+/), treffer = 0;
+    var secs2 = ihalt.querySelectorAll('.etc-thema');
+    for (var s = 0; s < secs2.length; s++) {
+      var lis = secs2[s].querySelectorAll('li[data-id]'), sicht = 0;
+      for (var i = 0; i < lis.length; i++) {
+        var hs = lis[i].getAttribute('data-such') || '';
+        var ok = worte.every(function (w) { return hs.indexOf(w) >= 0; });
+        lis[i].style.display = ok ? '' : 'none'; if (ok) sicht++;
+      }
+      secs2[s].style.display = sicht ? '' : 'none';
+      var z = secs2[s].querySelector('h2 .etc-grau'); if (z) z.textContent = sicht;
+      treffer += sicht;
+    }
+    if (!treffer) { var nix = el('p', 'etc-nichts', 'nichts gefunden für „' + q + '“'); ihalt.appendChild(nix); }
+  }
+  var sucheZeit = null;
+  function sucheModus(an) {
+    wahlKnopf.hidden = an; sucheFeld.hidden = !an; wahlListe.hidden = true;
+    vorEl.hidden = !an || !!sucheFeld.value;
+    if (an) sucheFeld.focus();
+  }
+  sucheFeld.addEventListener('input', function () {
+    vorEl.hidden = !!sucheFeld.value;
+    clearTimeout(sucheZeit);
+    sucheZeit = setTimeout(function () { if (sucheFeld.value.trim()) suche(sucheFeld.value); else zeigeListe('index'); }, 150);
+  });
+  sucheFeld.addEventListener('focus', function () { vorEl.hidden = !!sucheFeld.value; });
+  sucheFeld.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Enter') { suche(sucheFeld.value); vorEl.hidden = true; sucheFeld.blur(); }
+    if (ev.key === 'Escape') { sucheFeld.value = ''; waehle('index'); }
+  });
+  sucheFeld.addEventListener('blur', function () {
+    setTimeout(function () {
+      if (document.activeElement === sucheFeld) return;
+      vorEl.hidden = true;
+      if (!sucheFeld.value.trim()) waehle('index');
+    }, 180);
+  });
+  vorEl.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
+  vorEl.addEventListener('click', function (ev) {
+    var b2 = ev.target.closest('[data-vorschlag]'); if (!b2) return;
+    sucheFeld.value = b2.getAttribute('data-vorschlag'); suche(sucheFeld.value); vorEl.hidden = true;
+  });
+  function waehle(k) {
+    if (k === '__suche') { sucheModus(true); return; }
+    if (sucheFeld) { sucheFeld.value = ''; sucheModus(false); }
+    var b = wahlListe.querySelector('[data-wert="' + k + '"]');
+    wahlKnopf.textContent = b ? b.textContent : k; wahlKnopf.setAttribute('aria-expanded', 'false');
+    var alle = wahlListe.querySelectorAll('.etc-wahl-punkt');
+    for (var j = 0; j < alle.length; j++) alle[j].classList.toggle('etc-aktiv', alle[j] === b);
+    wahlListe.hidden = true;
+    zeigeListe(k);
+  }
+  wahlKnopf.addEventListener('click', function (ev) { ev.stopPropagation(); wahlListe.hidden = !wahlListe.hidden; wahlKnopf.setAttribute('aria-expanded', String(!wahlListe.hidden));  });
+  wahlListe.addEventListener('click', function (ev) { var b = ev.target.closest('[data-wert]'); if (b) waehle(b.getAttribute('data-wert')); });
+  document.addEventListener('click', function (ev) { if (!wahlListe.hidden && !kopf.contains(ev.target)) wahlListe.hidden = true; });
+  document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') wahlListe.hidden = true; });
+  var ihalt = el('div', 'etc-ihalt');
+  var gbereich = el('div', 'etc-graph-bereich');
+  liste.appendChild(kopf); liste.appendChild(ihalt); liste.appendChild(gbereich);
+  links.appendChild(liste);
+  var rechts = el('div', 'etc-tafel-bereich');
+  var tkopf = el('div', 'etc-kopf etc-tafel-kopf');
+  var ttitel = el('span', 'etc-tafel-titel');
+  ttitel.appendChild(document.createTextNode('sammlung '));
+  var uhr = el('span', 'etc-uhr'); ttitel.appendChild(uhr);
+  function zwei(n) { return (n < 10 ? '0' : '') + n; }
+  function stempel() {
+    var d = new Date();
+    var dat = zwei(d.getDate()) + '.' + zwei(d.getMonth() + 1) + '.' + d.getFullYear(), zeit = zwei(d.getHours()) + ':' + zwei(d.getMinutes()) + ':' + zwei(d.getSeconds());
+    return { text: 'sammlung ' + dat + ' ' + zeit, kurz: dat + ' ' + zeit,
+      datei: 'etcetera-sammlung-' + d.getFullYear() + '-' + zwei(d.getMonth() + 1) + '-' + zwei(d.getDate()) + '_' + zwei(d.getHours()) + '-' + zwei(d.getMinutes()) + '-' + zwei(d.getSeconds()) + '.pdf' };
+  }
+  function tick() { uhr.textContent = stempel().kurz; }
+  tick(); setInterval(tick, 1000);
+  var tknoepfe = el('span', 'etc-tafel-knoepfe');
+  var tgen = el('button', 'etc-leeren', 'erstellen'); tgen.type = 'button'; tgen.title = 'PDF aus der Sammlung erstellen';
+  var tleer = el('button', 'etc-karte-zu', '×'); tleer.type = 'button'; tleer.title = 'Sammlung leeren';
+  tknoepfe.appendChild(tgen); tknoepfe.appendChild(tleer);
+  tkopf.appendChild(ttitel); tkopf.appendChild(tknoepfe);
+  var tafelEl = el('div', 'etc-tafel');
+  rechts.appendChild(tkopf); rechts.appendChild(tafelEl);
+  buehne.appendChild(links); buehne.appendChild(rechts);
+  root.appendChild(buehne);
+  root.className += ' etc-js';
+
+  var graphDa = false;
+  function zeigeListe(k) {
+    var istGraph = k === 'graph';
+    links.classList.toggle('etc-links-graph', istGraph);
+    ihalt.style.display = istGraph ? 'none' : '';
+    gbereich.style.display = istGraph ? '' : 'none';
+    if (istGraph) {
+      if (!graphDa) { gbereich.appendChild(graph(gbereich)); graphDa = true; aktualisiere(); }
+      return;
+    }
+    ihalt.innerHTML = '';
+    var welche = k === 'index' ? reihe.filter(function (x) { return x !== 'ueber'; }) : [k];
+    welche.forEach(function (x) {
+      var c = themen[x].cloneNode(true);
+      var ids = c.querySelectorAll('[id]');
+      for (var j = 0; j < ids.length; j++) ids[j].removeAttribute('id');
+      if (k !== 'index') { var h = c.querySelector('h2'); if (h) h.parentNode.removeChild(h); }
+      ihalt.appendChild(c);
+    });
+    ihalt.scrollTop = 0;
+    markiereListe();
+  }
+
+  var GD = null;
+  try { GD = JSON.parse(document.getElementById('etc-graph-daten').textContent); } catch (e) { GD = null; }
+  function graph(host) {
+    var box = document.createElement('div'); box.className = 'etc-graph';
+    if (!GD) { box.textContent = 'Keine Graph-Daten.'; return box; }
+    var cv = document.createElement('canvas'), info = document.createElement('div');
+    info.className = 'etc-graph-info';
+    var stand = GD.nodes.length + ' Punkte · ' + GD.edges.length + ' Verbindungen · Klick legt auf die Tafel · ziehen, scrollen, Doppelklick setzt zurück';
+    info.textContent = stand;
+    box.appendChild(cv); box.appendChild(info);
+    var N = GD.nodes.map(function (n, i) {
+      var w = i * 2.39996, r = 14 * Math.sqrt(i + 1);
+      return { id: n[0], t: n[1], k: n[2], nr: n[3], th: GD.titel[n[2]] || n[2], x: Math.cos(w) * r, y: Math.sin(w) * r, vx: 0, vy: 0, nb: [] };
+    });
+    var idx = {}; N.forEach(function (n, i) { idx[n.id] = i; });
+    var E = [];
+    GD.edges.forEach(function (e) {
+      var a = idx[e[0]], b = idx[e[1]];
+      if (a == null || b == null || a === b) return;
+      E.push([a, b]); N[a].nb.push(b); N[b].nb.push(a);
+    });
+    N.forEach(function (n) { n.r = n.k === 'tag' ? 2.2 : 2.4 + Math.sqrt(n.nb.length) * 1.5; });
+    var ctx = cv.getContext('2d'), W = 300, H = 300, dpr = window.devicePixelRatio || 1;
+    var markiert = {};
+    host._markiere = function (m) { markiert = m; };
+    var z = 1, ox = 0, oy = 0, alpha = 1, hover = -1, drag = -1, pan = null, moved = false, eigen = false;
+    function groesse() {
+      W = host.clientWidth || 300;
+      H = host.clientHeight || 300;
+      box.style.height = H + 'px';
+      cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    }
+    function schritt() {
+      var i, j, a, b, dx, dy, d2, d, f;
+      for (i = 0; i < N.length; i++) {
+        a = N[i];
+        for (j = i + 1; j < N.length; j++) {
+          b = N[j]; dx = a.x - b.x; dy = a.y - b.y; d2 = dx * dx + dy * dy + 0.01;
+          if (d2 > 250000) continue;
+          f = 140 / d2; a.vx += dx * f; a.vy += dy * f; b.vx -= dx * f; b.vy -= dy * f;
+        }
+      }
+      for (i = 0; i < E.length; i++) {
+        a = N[E[i][0]]; b = N[E[i][1]]; dx = b.x - a.x; dy = b.y - a.y; d = Math.sqrt(dx * dx + dy * dy) || 1;
+        f = (d - 28) * 0.07 / d; a.vx += dx * f; a.vy += dy * f; b.vx -= dx * f; b.vy -= dy * f;
+      }
+      for (i = 0; i < N.length; i++) {
+        a = N[i]; a.vx -= a.x * 0.012; a.vy -= a.y * 0.012;
+        if (i === drag) { a.vx = a.vy = 0; continue; }
+        a.vx *= 0.72; a.vy *= 0.72; a.x += a.vx * alpha; a.y += a.vy * alpha;
+      }
+      alpha = Math.max(alpha * 0.99, 0.02);
+    }
+    function einpassen() {
+      var mx = 1, my = 1;
+      N.forEach(function (n) { mx = Math.max(mx, Math.abs(n.x) + n.r); my = Math.max(my, Math.abs(n.y) + n.r); });
+      z = Math.min(W / (2 * mx + 90), H / (2 * my + 90)); ox = 0; oy = 0;
+    }
+    function zeichne() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      if (!eigen) einpassen();
+      ctx.translate(W / 2 + ox, H / 2 + oy); ctx.scale(z, z);
+      var hv = hover >= 0 ? N[hover] : null, nah = {};
+      if (hv) { nah[hover] = 1; hv.nb.forEach(function (i) { nah[i] = 1; }); }
+      ctx.lineWidth = 1 / z;
+      E.forEach(function (e) {
+        var an = hv && (e[0] === hover || e[1] === hover);
+        ctx.strokeStyle = an ? 'rgba(255,255,255,.85)' : (hv ? 'rgba(255,255,255,.05)' : 'rgba(255,255,255,.18)');
+        ctx.beginPath(); ctx.moveTo(N[e[0]].x, N[e[0]].y); ctx.lineTo(N[e[1]].x, N[e[1]].y); ctx.stroke();
+      });
+      N.forEach(function (n, i) {
+        var hell = !hv || nah[i];
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.2832);
+        if (n.k === 'tag') { ctx.lineWidth = 1 / z; ctx.strokeStyle = hell ? '#9a9a9a' : '#2a2a2a'; ctx.stroke(); }
+        else { ctx.fillStyle = (i === hover || markiert[n.id]) ? '#fff' : (hell ? (n.k === 'bilder' ? '#d0d0d0' : '#8f8f8f') : '#2a2a2a'); ctx.fill(); }
+        if (markiert[n.id]) { ctx.beginPath(); ctx.arc(n.x, n.y, n.r + 3.5 / z, 0, 6.2832); ctx.lineWidth = 1 / z; ctx.strokeStyle = '#fff'; ctx.stroke(); }
+      });
+      ctx.font = (11 / z) + 'px "Helvetica Neue", Helvetica, Arial, sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      N.forEach(function (n, i) {
+        var zeig = hv ? nah[i] : (markiert[n.id] || n.r * z > 5.5 || z > 2.2);
+        if (!zeig) return;
+        ctx.fillStyle = hv && i !== hover ? 'rgba(255,255,255,.7)' : (hv ? '#fff' : 'rgba(255,255,255,.8)');
+        ctx.fillText(n.t.length > 34 ? n.t.slice(0, 32) + '…' : n.t, n.x, n.y + n.r + 3 / z);
+      });
+    }
+    function lauf() {
+      if (!document.body.contains(box)) return;
+      if (alpha > 0.021 || drag >= 0) schritt();
+      zeichne();
+      requestAnimationFrame(lauf);
+    }
+    function lokal(ev) {
+      var r = cv.getBoundingClientRect();
+      return { x: (ev.clientX - r.left - W / 2 - ox) / z, y: (ev.clientY - r.top - H / 2 - oy) / z };
+    }
+    function treffer(p) {
+      var best = -1, bd = 1e12;
+      N.forEach(function (n, i) {
+        var dx = n.x - p.x, dy = n.y - p.y, d = dx * dx + dy * dy, r = n.r + 6 / z;
+        if (d < r * r && d < bd) { bd = d; best = i; }
+      });
+      return best;
+    }
+    function zeigeInfo(h) { info.textContent = h >= 0 ? ((N[h].nr ? N[h].nr + ' · ' : '') + N[h].t + ' · ' + N[h].th) : stand; }
+    cv.addEventListener('pointerdown', function (ev) {
+      var p = lokal(ev); moved = false; drag = treffer(p);
+      if (drag < 0) pan = { x: ev.clientX - ox, y: ev.clientY - oy };
+      if (cv.setPointerCapture) cv.setPointerCapture(ev.pointerId);
+    });
+    cv.addEventListener('pointermove', function (ev) {
+      var p = lokal(ev);
+      if (drag >= 0) { N[drag].x = p.x; N[drag].y = p.y; alpha = Math.max(alpha, 0.3); moved = true; eigen = true; }
+      else if (pan) { ox = ev.clientX - pan.x; oy = ev.clientY - pan.y; moved = true; eigen = true; }
+      else { var h = treffer(p); if (h !== hover) { hover = h; cv.style.cursor = h >= 0 ? 'pointer' : 'grab'; zeigeInfo(h); } }
+    });
+    cv.addEventListener('pointerup', function () {
+      if (drag >= 0 && !moved && N[drag].k !== 'tag') tafel(N[drag].id);
+      drag = -1; pan = null;
+    });
+    cv.addEventListener('pointerleave', function () { if (drag < 0 && !pan) { hover = -1; zeigeInfo(-1); } });
+    cv.addEventListener('dblclick', function () { eigen = false; alpha = Math.max(alpha, 0.3); });
+    cv.addEventListener('wheel', function (ev) {
+      ev.preventDefault(); eigen = true;
+      var r = cv.getBoundingClientRect(), mx = ev.clientX - r.left - W / 2, my = ev.clientY - r.top - H / 2;
+      var nz = Math.min(8, Math.max(0.15, z * Math.exp(-ev.deltaY * 0.0015)));
+      ox = mx - (mx - ox) * nz / z; oy = my - (my - oy) * nz / z; z = nz;
+    }, { passive: false });
+    window.addEventListener('resize', function () { if (document.body.contains(box)) groesse(); });
+    if (window.ResizeObserver) new ResizeObserver(function () { if (document.body.contains(box)) groesse(); }).observe(host);
+    for (var vor = 0; vor < 260; vor++) schritt();
+    requestAnimationFrame(function () { groesse(); lauf(); });
+    return box;
+  }
+  function themaVon(id) {
+    for (var k in themen) { if (themen[k].querySelector('[data-id="' + id + '"]')) return k; }
+    return null;
+  }
+
+  /* Tafel: was man anklickt, sammelt sich rechts; neuestes oben */
+  var aufTafel = [];
+  function karte(id) {
+    var k = themaVon(id); if (!k) return null;
+    var li = themen[k].querySelector('[data-id="' + id + '"]');
+    var art = el('article', 'etc-karte' + (k === 'bilder' ? ' etc-karte-bild' : ''));
+    art.setAttribute('data-karte', id);
+    var h = el('header', 'etc-karte-kopf');
+    h.appendChild(el('span', 'etc-pos', ''));
+    var ti = el('span', 'etc-ti'); ti.innerHTML = li.querySelector('.etc-ti').innerHTML; h.appendChild(ti);
+    h.appendChild(el('span', 'etc-typ', li.querySelector('.etc-nr').textContent + ' · ' + li.querySelector('.etc-typ').textContent));
+    var zu = el('button', 'etc-karte-zu', '×'); zu.type = 'button'; zu.title = 'aus der Sammlung nehmen'; h.appendChild(zu);
+    var auf = el('div', 'etc-auf'); auf.innerHTML = li.querySelector('.etc-auf').innerHTML;
+    art.appendChild(h); art.appendChild(auf);
+    return art;
+  }
+  function aktualisiere() {
+    var m = {}; aufTafel.forEach(function (x) { m[x] = 1; });
+    var ks = tafelEl.querySelectorAll('.etc-karte');
+    for (var q = 0; q < ks.length; q++) {
+      var n = aufTafel.indexOf(ks[q].getAttribute('data-karte')) + 1;
+      ks[q].querySelector('.etc-pos').textContent = (n < 10 ? '0' : '') + n;
+    }
+    if (gbereich._markiere) gbereich._markiere(m);
+    tknoepfe.style.visibility = aufTafel.length ? 'visible' : 'hidden';
+    if (!aufTafel.length) {
+      tafelEl.innerHTML = '';
+      var leer = el('div', 'etc-tafel-leer');
+      var intro = quelle.querySelector('.etc-intro'); leer.innerHTML = intro ? intro.innerHTML : '';
+      tafelEl.appendChild(leer);
+    }
+    markiereListe();
+  }
+  function markiereListe() {
+    var rows = ihalt.querySelectorAll('[data-id]');
+    for (var j = 0; j < rows.length; j++) rows[j].classList.toggle('etc-auf-tafel', aufTafel.indexOf(rows[j].getAttribute('data-id')) >= 0);
+  }
+  function tafel(id) {
+    var da = tafelEl.querySelector('[data-karte="' + id + '"]');
+    if (!da) {
+      da = karte(id); if (!da) return;
+      var leer = tafelEl.querySelector('.etc-tafel-leer'); if (leer) tafelEl.removeChild(leer);
+      aufTafel.push(id);
+    }
+    tafelEl.insertBefore(da, tafelEl.firstChild);
+    da.classList.remove('etc-neu-da'); void da.offsetWidth; da.classList.add('etc-neu-da');
+    tafelEl.scrollTop = 0;
+    aktualisiere();
+    if (window.innerWidth <= 800) rechts.scrollIntoView();
+  }
+  /* Klick auf eine Zeile in der Liste legt sie auf die Tafel */
+  ihalt.addEventListener('click', function (ev) {
+    var s = ev.target.closest('summary'); if (!s) return;
+    ev.preventDefault();
+    tafel(s.parentNode.parentNode.getAttribute('data-id'));
+  });
+  /* Verweise auf der Tafel legen ihr Ziel dazu; × nimmt eine Karte weg */
+  tafelEl.addEventListener('click', function (ev) {
+    var t = ev.target;
+    if (t.classList.contains('etc-karte-zu')) {
+      var a = t.closest('[data-karte]'), id = a.getAttribute('data-karte');
+      tafelEl.removeChild(a); aufTafel = aufTafel.filter(function (x) { return x !== id; }); aktualisiere(); return;
+    }
+    var l = t.closest('a[data-ziel]');
+    if (l) { ev.preventDefault(); tafel(l.getAttribute('data-ziel')); }
+  });
+  tleer.addEventListener('click', function () { tafelEl.innerHTML = ''; aufTafel = []; aktualisiere(); });
+  /* erstellen: die Sammlung als PDF direkt herunterladen (jsPDF, wird erst beim Klick geladen) */
+  var JSPDF = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+  function ladeJsPDF(gut, schlecht) {
+    if (window.jspdf && window.jspdf.jsPDF) { gut(window.jspdf.jsPDF); return; }
+    var s = document.createElement('script'); s.src = JSPDF; s.async = true;
+    s.onload = function () { if (window.jspdf && window.jspdf.jsPDF) gut(window.jspdf.jsPDF); else schlecht(); };
+    s.onerror = schlecht; document.head.appendChild(s);
+  }
+  var WIN = '\u20ac\u201a\u0192\u201e\u2026\u2020\u2021\u02c6\u2030\u0160\u2039\u0152\u017d\u2018\u2019\u201c\u201d\u2022\u2013\u2014\u02dc\u2122\u0161\u203a\u0153\u017e\u0178';
+  function sauber(s) {
+    s = s.replace(/[\u2007\u00a0]/g, ' ').replace(/\u2192/g, '->').replace(/[\u2197\u2199]/g, '').replace(/\s+/g, ' ').trim();
+    var o = ''; for (var i = 0; i < s.length; i++) { var c = s.charAt(i); if (c.charCodeAt(0) < 256 || WIN.indexOf(c) >= 0) o += c; }
+    return o;
+  }
+  function txt(node) {
+    var c = node.cloneNode(true), xs = c.querySelectorAll('.etc-x');
+    for (var i = 0; i < xs.length; i++) xs[i].textContent = new Array(Math.max(3, Math.min(14, xs[i].textContent.length)) + 1).join('\u00a4');
+    return sauber(c.textContent);
+  }
+  function bloecke(k) {
+    var b = [], auf = k.querySelector('.etc-auf');
+    Array.prototype.forEach.call(auf.children, function (n) {
+      if (n.classList.contains('etc-dl')) {
+        var dts = n.querySelectorAll('dt');
+        for (var i = 0; i < dts.length; i++) b.push({ t: txt(dts[i]) + '   ' + txt(dts[i].nextElementSibling), grau: 1, klein: 1 });
+      } else if (n.tagName === 'FIGURE') { var im = n.querySelector('img'); if (im) b.push({ bild: im }); }
+      else if (n.classList.contains('etc-text')) {
+        Array.prototype.forEach.call(n.children, function (m) {
+          if (/^H[1-6]$/.test(m.tagName)) b.push({ t: txt(m), fett: 1, vor: 1 });
+          else if (m.tagName === 'UL' || m.tagName === 'OL') Array.prototype.forEach.call(m.children, function (li) { b.push({ t: '\u2013 ' + txt(li), einzug: 1, eng: 1 }); });
+          else if (m.classList.contains('tw')) Array.prototype.forEach.call(m.querySelectorAll('tr'), function (tr) { b.push({ t: Array.prototype.map.call(tr.children, txt).join('   '), klein: 1, eng: 1 }); });
+          else { var s = txt(m); if (s) b.push({ t: s }); }
+        });
+      } else { var s2 = txt(n); if (s2) b.push({ t: s2, grau: 1, klein: 1 }); }
+    });
+    return b;
+  }
+  function bilderBereit() {
+    var ims = tafelEl.querySelectorAll('.etc-karte img');
+    return Promise.all(Array.prototype.map.call(ims, function (im) {
+      if (im.complete && im.naturalWidth) return true;
+      im.loading = 'eager';
+      return new Promise(function (r) { im.onload = im.onerror = r; setTimeout(r, 4000); });
+    }));
+  }
+  function bildDaten(im, max) {
+    try {
+      var w = im.naturalWidth, h = im.naturalHeight; if (!w || !h) return null;
+      var f = Math.min(1, (max || 1600) / Math.max(w, h)), c = document.createElement('canvas');
+      c.width = Math.round(w * f); c.height = Math.round(h * f);
+      var g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(im, 0, 0, c.width, c.height);
+      return { url: c.toDataURL('image/jpeg', 0.85), w: c.width, h: c.height };
+    } catch (e) { return null; }
+  }
+  /* PDF wie „collection 00“: Deckblatt mit Liste, dann jeder Eintrag auf einer eigenen A4-Seite,
+     8 Lochmarken (888) schwarz gefüllt, Fußzeile mit Titel · Index · Tag in drei festen Spalten */
+  var ARTNAME = { texte: 'text', wissen: 'wissen', referenzen: 'referenz', ressourcen: 'ressource', werkzeuge: 'werkzeug', orte: 'ort', bilder: 'bild', projekt: 'projekt' };
+  function eintrag(k) {
+    var id = k.getAttribute('data-karte'), th = themaVon(id);
+    var meta = txt(k.querySelector('.etc-typ')).split(' · ');
+    var tags = '', dts = k.querySelectorAll('.etc-dl dt');
+    for (var i = 0; i < dts.length; i++) if (txt(dts[i]) === 'tags') tags = txt(dts[i].nextElementSibling);
+    return { k: k, titel: txt(k.querySelector('.etc-ti')), nr: meta[0] || '', typ: meta.slice(1).join(' · '), art: ARTNAME[th] || th, tags: tags,
+      img: k.querySelector('figure img') };
+  }
+  function machePDF(JsPDF, st) {
+    var doc = new JsPDF({ unit: 'pt', format: 'a4' });
+    var PW = 595.28, PH = 841.89, CM = 28.3465;
+    var X1 = 2.4 * CM, X2 = 8.55 * CM, X3 = 11.0 * CM, FUSS = PH - 0.85 * CM, LH = 0.36 * CM;
+    function schrift(gr, stil, grau) { doc.setFont('helvetica', stil || 'normal'); doc.setFontSize(gr); doc.setTextColor(grau ? 110 : 0); }
+    function zeile(s, x, base) {
+      var xx = x, pt = doc.getFontSize();
+      s.split(/(¤+)/).forEach(function (teil) {
+        if (!teil) return;
+        var w = doc.getTextWidth(teil);
+        if (teil.charAt(0) === '¤') { doc.setFillColor(0, 0, 0); doc.rect(xx, base - pt * 0.74, w, pt * 0.92, 'F'); }
+        else doc.text(teil, xx, base);
+        xx += w;
+      });
+    }
+    function passe(s, breite) {
+      if (doc.getTextWidth(s) <= breite) return s;
+      while (s.length > 1 && doc.getTextWidth(s + '…') > breite) s = s.slice(0, -1);
+      return s + '…';
+    }
+    function loecher() {
+      doc.setDrawColor(0, 0, 0); doc.setLineWidth(0.6);
+      [750, 529, 305, 81].forEach(function (yy) { doc.circle(32, PH - yy, 8, 'S'); doc.circle(PW - 32, PH - yy, 8, 'S'); });
+    }
+    function fuss(a, b, c) {
+      schrift(9.5);
+      zeile(passe(a, X2 - X1 - 10), X1, FUSS);
+      zeile(passe(b, X3 - X2 - 8), X2, FUSS);
+      zeile(passe(c, PW - X3 - 1.6 * CM), X3, FUSS);
+    }
+    function drittes(e) { return e.tags || (e.typ && e.typ !== e.art ? e.art + ' · ' + e.typ : e.art); }
+    var liste = aufTafel.map(function (id) { return tafelEl.querySelector('[data-karte="' + id + '"]'); }).filter(Boolean).map(eintrag);
+
+    /* Deckblatt */
+    loecher(); schrift(9.5);
+    var y = 1.4 * CM + 9.5 * 0.8;
+    liste.forEach(function (e) {
+      if (y > PH - 3 * CM) return;
+      zeile(passe(e.titel, X2 - X1 - 10), X1, y);
+      zeile(passe(e.nr, X3 - X2 - 8), X2, y);
+      zeile(passe(drittes(e), PW - X3 - 1.6 * CM), X3, y);
+      y += LH;
+    });
+    schrift(9.5); doc.text('etcetera', X1, FUSS);
+    schrift(9.5); doc.text(st.text, X3, FUSS);
+
+    /* je Eintrag eine Seite */
+    liste.forEach(function (e) {
+      doc.addPage();
+      if (e.img) {
+        var d = bildDaten(e.img, 2400);
+        if (d) {
+          var maxW = PW - 1 * CM, maxH = PH - 4 * CM, r = d.w / d.h, w, h;
+          if (maxW / r < maxH) { w = maxW; h = maxW / r; } else { h = maxH; w = maxH * r; }
+          doc.addImage(d.url, 'JPEG', (PW - w) / 2, 1 * CM, w, h);
+        }
+        loecher(); fuss(e.titel, e.nr, drittes(e));
+        return;
+      }
+      /* Textseite: Titel, dann die Notiz; läuft sie über, folgt eine weitere Seite mit Lochmarken und Fußzeile */
+      var X = X1, B = PW - 2 * X1, UNTEN = PH - 2.2 * CM;
+      y = 1.6 * CM;
+      function weiter(h) { if (y + h > UNTEN) { loecher(); fuss(e.titel, e.nr, drittes(e)); doc.addPage(); y = 1.6 * CM; } }
+      function absatz(s, gr, stil, grau, lh, einzug) {
+        schrift(gr, stil, grau);
+        var hz = gr * (lh || 1.4);
+        doc.splitTextToSize(s, B - (einzug || 0)).forEach(function (l) { weiter(hz); zeile(l, X + (einzug || 0), y + gr * 0.95); y += hz; });
+      }
+      bloecke(e.k).forEach(function (bl) {
+        if (bl.bild) return;
+        if (bl.vor) y += 6;
+        absatz(bl.t, bl.klein ? 8.5 : 9.5, 'normal', bl.grau, 1.45, 0);
+        y += bl.eng ? 1.5 : 5;
+      });
+      loecher(); fuss(e.titel, e.nr, drittes(e));
+    });
+    doc.save(st.datei);
+  }
+  tgen.addEventListener('click', function () {
+    if (!aufTafel.length || tgen.disabled) return;
+    var alt = tgen.textContent; tgen.disabled = true; tgen.textContent = 'erstelle …';
+    function ende() { tgen.disabled = false; tgen.textContent = alt; }
+    ladeJsPDF(function (J) {
+      var st = stempel(); bilderBereit().then(function () { try { machePDF(J, st); } catch (e) { console.error(e); drucken(); } ende(); });
+    }, function () { drucken(); ende(); });
+  });
+  /* Rückfall ohne Netz: als Seite öffnen und über den Druckdialog sichern */
+  function drucken() {
+    if (!aufTafel.length) return;
+    var w = window.open('', '_blank');
+    if (!w) { alert('Bitte Pop-ups für diese Seite erlauben, dann noch einmal „erstellen“.'); return; }
+    var heute = new Date().toLocaleDateString('de-DE');
+    var karten = Array.prototype.map.call(tafelEl.querySelectorAll('.etc-karte'), function (k) {
+      var c = k.cloneNode(true); var zu = c.querySelector('.etc-karte-zu'); if (zu) zu.parentNode.removeChild(zu);
+      c.classList.remove('etc-neu-da'); return c.outerHTML;
+    }).reverse().join('');
+    w.document.open();
+    w.document.write('<!doctype html><html lang="de"><head><meta charset="utf-8"><base href="' + location.href.replace(/"/g, '') + '">'
+      + '<title>etcetera sammlung ' + heute + '</title><style>' + DRUCK + '</style></head><body>'
+      + '<header class="kopf"><b>etcetera</b> · sammlung · ' + heute + ' · ' + aufTafel.length + ' Einträge</header>'
+      + '<main class="tafel">' + karten + '</main>'
+      + '<script>window.onload=function(){setTimeout(function(){window.print();},300);};<\/script></body></html>');
+    w.document.close();
+  }
+  var DRUCK = '@page{size:A4;margin:14mm}*{box-sizing:border-box}body{margin:0;font:9.5pt/1.4 "Helvetica Neue",Helvetica,Arial,sans-serif;color:#000}'
+    + '.kopf{padding-bottom:6mm;margin-bottom:4mm;border-bottom:1px solid #000}a{color:inherit;text-decoration:none}'
+    + '.tafel{display:grid;grid-template-columns:1fr 1fr;gap:0 8mm;align-items:start}'
+    + '.etc-karte{grid-column:1/-1;break-inside:avoid;padding:3mm 0 5mm;border-bottom:.5px solid #000}.etc-karte-bild{grid-column:auto}'
+    + '.etc-karte-kopf{display:grid;grid-template-columns:9mm 1fr auto;gap:0 4mm;margin-bottom:2mm}.etc-pos{font-variant-numeric:tabular-nums}'
+    + '.etc-karte-bild .etc-karte-kopf .etc-typ{display:none}.etc-nr,.etc-typ{color:#666}.etc-intro{display:none}.etc-ti{font-style:italic;text-transform:uppercase}'
+    + '.etc-auf{padding-left:13mm}.etc-karte-bild .etc-auf{padding-left:0}.etc-auf>*+*{margin-top:2mm}'
+    + 'p,ul,dl,figure{margin:0}.etc-text p,.etc-text ul{margin:0 0 .6em}.etc-text ul{padding-left:1.2em}'
+    + '.etc-text h2,.etc-text h3,.etc-text h4{font:inherit;font-weight:600;margin:1em 0 .2em}.etc-text strong{font-weight:600}'
+    + '.etc-dl{display:grid;grid-template-columns:22mm 1fr;gap:1px 4mm}.etc-dl dt{color:#666}.etc-grau{color:#666}'
+    + 'table{border-collapse:collapse;font-size:8pt}td,th{text-align:left;vertical-align:top;padding:1px 6px 1px 0;border-bottom:.5px solid #ccc}'
+    + 'img{display:block;max-width:100%;max-height:110mm;height:auto}.etc-x{display:inline-block;background:#000;white-space:pre;height:1em;vertical-align:-.12em}'
+    + '.etc-bez{color:#666}';
+
+  waehle("index");
+  aktualisiere();
+})();
+</script>
+</body></html>
