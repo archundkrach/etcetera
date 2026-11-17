@@ -3,7 +3,7 @@
 body { margin: 0; background: #fff; }
 /* etcetera – alles unter .etc, damit Cargos eigene Stile nicht kollidieren */
 .etc { --grund: #fff; --ink: #000; --grau: #8a8a8a; --linie: rgba(0,0,0,.6); --haar: rgba(0,0,0,.14);
-  --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 16px;
+  --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 28px;
   font: 14px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--grund);
   -webkit-font-smoothing: antialiased; }
 .etc * { box-sizing: border-box; }
@@ -15,12 +15,12 @@ body { margin: 0; background: #fff; }
 .etc .etc-intro { display: none; }
 
 /* Listen: Zeilen mit Linie, Titel kursiv in Versalien */
-.etc .etc-thema h2 { font: inherit; color: var(--grau); padding: 28px var(--rand) 8px; }
+.etc .etc-thema h2 { font: inherit; color: var(--grau); padding: 20px var(--rand) 8px; }
 .etc ol { list-style: none; }
 .etc .etc-thema > ol > li { border-bottom: 1px solid var(--linie); }
-.etc summary { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr) auto; gap: 0 16px; padding: 11px var(--rand); cursor: pointer; list-style: none; }
+.etc summary { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr) auto; gap: 0 16px; padding: 7px var(--rand); cursor: pointer; list-style: none; }
 .etc summary::-webkit-details-marker { display: none; }
-.etc .etc-ti { min-width: 0; font-style: italic; text-transform: uppercase; letter-spacing: 0.01em; }
+.etc .etc-ti { min-width: 0; }
 .etc .etc-nr, .etc .etc-typ, .etc .etc-pos { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .etc .etc-typ { color: var(--grau); }
 .etc summary:hover .etc-ti { color: var(--grau); }
@@ -61,7 +61,7 @@ body { margin: 0; background: #fff; }
 .etc .etc-links.etc-links-graph { --grund: #000; --ink: #fff; --linie: rgba(255,255,255,.55); --haar: rgba(255,255,255,.22);
   --feld: #262626; --feldrand: #444; --pfeil: #ddd; border-right-color: #000; }
 .etc .etc-liste-bereich { height: 100%; display: flex; flex-direction: column; min-height: 0; }
-.etc .etc-kopf { position: relative; display: flex; align-items: center; gap: 16px; min-height: 48px; padding: 0 var(--rand); flex: 0 0 auto; border-bottom: 1px solid var(--linie); }
+.etc .etc-kopf { position: relative; display: flex; align-items: center; gap: 16px; min-height: 46px; padding: 0 var(--rand); flex: 0 0 auto; border-bottom: 1px solid var(--linie); }
 .etc .etc-ihalt { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 80px; }
 .etc .etc-ihalt, .etc .etc-tafel { scrollbar-width: none; -ms-overflow-style: none; }
 .etc .etc-ihalt::-webkit-scrollbar, .etc .etc-tafel::-webkit-scrollbar { display: none; }
@@ -117,7 +117,7 @@ body { margin: 0; background: #fff; }
 .etc .etc-karte { grid-column: 1 / -1; border-bottom: 1px solid var(--linie); }
 .etc .etc-karte-bild { grid-column: auto; border-right: 1px solid var(--haar); }
 .etc .etc-karte-bild:nth-child(even) { border-right: 0; }
-.etc .etc-karte-kopf { display: grid; grid-template-columns: var(--pos) minmax(0, 1fr) auto auto; gap: 0 16px; padding: 11px var(--rand); align-items: baseline; }
+.etc .etc-karte-kopf { display: grid; grid-template-columns: var(--pos) minmax(0, 1fr) auto auto; gap: 0 16px; padding: 7px var(--rand); align-items: baseline; }
 .etc .etc-karte-bild .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
 .etc .etc-karte-bild .etc-karte-kopf .etc-typ { display: none; }
 .etc .etc-karte-zu { font: inherit; font-size: 18px; line-height: 1; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; }
@@ -131,7 +131,7 @@ body { margin: 0; background: #fff; }
 .etc .etc-tafel-leer { grid-column: 1 / -1; padding: 20px var(--rand) 40px calc(var(--rand) + var(--pos) + 16px); max-width: calc(48ch + 120px); }
 
 @media (max-width: 800px) {
-  .etc { --rand: 14px; }
+  .etc { --rand: 18px; }
   .etc .etc-buehne { display: block; height: auto; }
   .etc .etc-links { height: 75vh; border-right: 0; border-bottom: 1px solid var(--linie); }
   .etc .etc-tafel-bereich { min-height: 60vh; }
