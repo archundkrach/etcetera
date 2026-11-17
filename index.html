@@ -1,15 +1,12 @@
 <!doctype html>
 <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>etcetera</title><style>
 body { margin: 0; background: #fff; }
-/* Schrift: Inter Tight (SIL Open Font License), selbst gehostet unter fonts/ */
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 400; font-display: swap;
-  src: url("fonts/inter-tight-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "Inter Tight"; font-style: normal; font-weight: 500; font-display: swap;
-  src: url("fonts/inter-tight-latin-500-normal.woff2") format("woff2"); }
-/* etcetera – alles unter .etc, damit Cargos eigene Stile nicht kollidieren */
+/* Schrift: Commissioner (SIL Open Font License), variabel mit Flare-Achse, selbst gehostet unter fonts/ */
+@font-face { font-family: "Commissioner Flare"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("fonts/commissioner-latin-full-normal.woff2") format("woff2-variations"); }
 .etc { --grund: #fff; --ink: #000; --grau: #8a8a8a; --linie: rgba(0,0,0,.6); --haar: rgba(0,0,0,.14);
   --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 28px;
-  font: 500 14px/1.45 "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: -0.012em; color: var(--ink); background: var(--grund);
+  font: 300 14px/1.45 "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.005em; color: var(--ink); background: var(--grund);
   -webkit-font-smoothing: antialiased; }
 .etc * { box-sizing: border-box; }
 .etc p, .etc h2, .etc ol, .etc figure, .etc dl, .etc dd { margin: 0; padding: 0; }
@@ -42,7 +39,7 @@ body { margin: 0; background: #fff; }
 .etc .etc-text { max-width: 62ch; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
 .etc .etc-text > :first-child { margin-top: 0; }
 .etc .etc-text p { margin: 0 0 0.75em; }
-.etc .etc-text h2, .etc .etc-text h3, .etc .etc-text h4 { font: inherit; font-weight: 600; margin: 1.4em 0 0.35em; padding: 0; }
+.etc .etc-text h2, .etc .etc-text h3, .etc .etc-text h4 { font: inherit; font-weight: 500; margin: 1.4em 0 0.35em; padding: 0; }
 .etc .etc-text strong { font-weight: 600; }
 .etc .etc-text code { font: inherit; }
 .etc .etc-text ul { list-style: none; margin: 0 0 0.75em; padding: 0; }
@@ -150,8 +147,9 @@ body { margin: 0; background: #fff; }
 
 /* Grau etwas leichter */
 .etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
-.etc .etc-leeren, .etc .etc-vorschlag { font-weight: 400; }
-.etc .etc-text strong, .etc .etc-text th { font-weight: 600; }
+.etc .etc-leeren, .etc .etc-vorschlag { font-weight: 250; }
+.etc .etc-text strong, .etc .etc-text th { font-weight: 500; }
+.etc, .etc * { font-variation-settings: "FLAR" 100; }
 </style></head>
 <body>
 <div class="etc" id="etc">
@@ -512,7 +510,7 @@ body { margin: 0; background: #fff; }
         else { ctx.fillStyle = (i === hover || markiert[n.id]) ? '#fff' : (hell ? (n.k === 'bilder' ? '#d0d0d0' : '#8f8f8f') : '#2a2a2a'); ctx.fill(); }
         if (markiert[n.id]) { ctx.beginPath(); ctx.arc(n.dx, n.dy, n.r + 3.5 / z, 0, 6.2832); ctx.lineWidth = 1 / z; ctx.strokeStyle = '#fff'; ctx.stroke(); }
       });
-      ctx.font = '500 ' + (14 / z) + 'px "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif';
+      ctx.font = '300 ' + (14 / z) + 'px "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'top';
       N.forEach(function (n, i) {
         var zeig = hv ? nah[i] : (markiert[n.id] || n.r * z > 5.5 || z > 2.2);
