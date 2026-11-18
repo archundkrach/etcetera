@@ -255,7 +255,14 @@ html.nacht body { background: #000; }
 .etc .etc-darstellung button.etc-aktiv { text-decoration: underline; text-underline-offset: 3px; }
 
 /* alle Symbole mit derselben feinen Linie, egal wie groß sie gezeichnet sind */
-.etc .etc-kopf svg *, .etc .etc-karte-zu svg *, .etc .etc-bild-zu svg * { vector-effect: non-scaling-stroke; stroke-width: 1.5px; }
+.etc .etc-kopf svg *, .etc .etc-karte-zu svg *, .etc .etc-bild-zu svg *, .etc .etc-text-zu svg * { vector-effect: non-scaling-stroke; stroke-width: 1.5px; }
+
+/* × am Text einer Karte: wie bei den Bildern, erscheint beim Überfahren, mobil immer */
+.etc .etc-textblock { position: relative; padding-right: 30px; }
+.etc .etc-text-zu { position: absolute; top: 2px; right: 0; display: flex; padding: 3px; color: var(--ink); background: none; border: 0; cursor: pointer;
+  opacity: 0; transition: opacity .15s; }
+.etc .etc-textblock:hover .etc-text-zu { opacity: 1; }
+@media (hover: none), (max-width: 800px) { .etc .etc-text-zu { opacity: 1; } }
 
 /* Nacht: schwarzer Grund, weiße Schrift (Klasse „nacht“ am html, gesetzt im Kopf) */
 .nacht .etc { --grund: #000; --ink: #fff; --linie: rgba(255,255,255,.5); --haar: rgba(255,255,255,.2);
@@ -813,7 +820,22 @@ html.nacht body { background: #000; }
     var auf = el('div', 'etc-auf'); auf.innerHTML = li.querySelector('.etc-auf').innerHTML;
     art.appendChild(h); art.appendChild(auf);
     var bb = auf.querySelector('.etc-bilder'); if (bb) bilderKnoepfe(bb);
+    var tx = auf.querySelector('.etc-text'); if (tx) textKnopf(tx);
     return art;
+  }
+  /* der Text einer Notiz bekommt ein eigenes ×, wie die Bilder: so bleiben in der Sammlung auch nur die Bilder */
+  function textKnopf(tx) {
+    var block = el('div', 'etc-textblock'); tx.parentNode.insertBefore(block, tx); block.appendChild(tx);
+    var x = el('button', 'etc-text-zu'); x.innerHTML = KREUZ; x.type = 'button'; x.title = 'Text aus der Sammlung nehmen'; x.setAttribute('aria-label', 'Text aus der Sammlung nehmen');
+    block.appendChild(x);
+  }
+  function textZurueck(karteEl) {
+    if (!karteEl.classList.contains('etc-ohne-text')) return;
+    var id = karteEl.getAttribute('data-karte'), k = themaVon(id); if (!k) return;
+    var q = themen[k].querySelector('[data-id="' + id + '"] .etc-text'); if (!q) return;
+    var tx = q.cloneNode(true), auf = karteEl.querySelector('.etc-auf'), bb = auf.querySelector('.etc-bilder');
+    if (bb) auf.insertBefore(tx, bb); else auf.appendChild(tx);
+    textKnopf(tx); karteEl.classList.remove('etc-ohne-text');
   }
   /* jedes Bild einer Notiz bekommt ein eigenes ×; bei mehreren stehen sie nebeneinander */
   function bilderKnoepfe(bb) {
@@ -871,6 +893,7 @@ html.nacht body { background: #000; }
       var leer = tafelEl.querySelector('.etc-tafel-leer'); if (leer) tafelEl.removeChild(leer);
       aufTafel.push(id);
     } else if (bid) bildZurueck(bid, da);
+    else textZurueck(da);
     tafelEl.insertBefore(da, tafelEl.firstChild);
     da.classList.remove('etc-neu-da'); void da.offsetWidth; da.classList.add('etc-neu-da');
     tafelEl.scrollTop = 0;
@@ -887,6 +910,10 @@ html.nacht body { background: #000; }
   /* Verweise auf der Tafel legen ihr Ziel dazu; × nimmt eine Karte weg */
   tafelEl.addEventListener('click', function (ev) {
     var t = ev.target;
+    if (t.closest('.etc-text-zu')) {
+      var tb = t.closest('.etc-textblock'), kt = tb.closest('[data-karte]'); tb.parentNode.removeChild(tb); kt.classList.add('etc-ohne-text');
+      aktualisiere(); return;
+    }
     if (t.closest('.etc-bild-zu')) {
       var fig = t.closest('figure'), bb = fig.parentNode; bb.removeChild(fig);
       if (!bb.querySelector('figure')) bb.parentNode.removeChild(bb); else bilderKnoepfe(bb);
@@ -1047,7 +1074,7 @@ html.nacht body { background: #000; }
       L.forEach(function (z) { if (z.gap != null) { yy += z.gap; return; } zeile(z.s, X1, yy + GR * 0.95); yy += ZH; });
     }
     liste.forEach(function (e) {
-      var L = e.nurBild ? [] : zeilenVon(e.k);
+      var L = (e.nurBild || e.k.classList.contains('etc-ohne-text')) ? [] : zeilenVon(e.k);
       if (L.length) {
         var platz = UNTEN - OBEN, teile = [[]], h = 0;
         L.forEach(function (z) {
@@ -1089,7 +1116,7 @@ html.nacht body { background: #000; }
     if (!w) { alert('Bitte Pop-ups für diese Seite erlauben, dann noch einmal „erstellen“.'); return; }
     var heute = new Date().toLocaleDateString('de-DE');
     var karten = Array.prototype.map.call(tafelEl.querySelectorAll('.etc-karte'), function (k) {
-      var c = k.cloneNode(true); var zu = c.querySelectorAll('.etc-karte-zu, .etc-bild-zu'); for (var zi = 0; zi < zu.length; zi++) zu[zi].parentNode.removeChild(zu[zi]);
+      var c = k.cloneNode(true); var zu = c.querySelectorAll('.etc-karte-zu, .etc-bild-zu, .etc-text-zu'); for (var zi = 0; zi < zu.length; zi++) zu[zi].parentNode.removeChild(zu[zi]);
       c.classList.remove('etc-neu-da'); return c.outerHTML;
     }).reverse().join('');
     w.document.open();
