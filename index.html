@@ -95,15 +95,23 @@ body { margin: 0; background: #fff; }
 .etc .etc-wahl-liste[hidden] { display: none; }
 .etc .etc-wahl-trenner { height: 1px; margin: 5px 9px; background: rgba(0,0,0,.14); }
 .etc .etc-links-graph .etc-wahl-trenner { background: rgba(255,255,255,.18); }
-.etc .etc-suche-kopf { flex: 1 1 auto; display: block; width: calc(100% + 11px); margin-left: -11px; font: inherit; font-size: 14px; line-height: 20px; color: var(--ink);
-  background: var(--feld); border: 1px solid var(--feldrand); border-radius: 6px; padding: 3px 10px; outline: none; -webkit-appearance: none; appearance: none; }
-.etc .etc-suche-kopf:focus { outline: 3px solid rgba(42,110,232,.45); outline-offset: 0; }
-.etc .etc-suche-kopf[hidden], .etc .etc-wahl-knopf[hidden], .etc .etc-vorschlag-box[hidden] { display: none; }
-.etc .etc-vorschlag-box { position: absolute; top: 42px; left: calc(var(--rand) - 11px); right: var(--rand); z-index: 30; display: flex; flex-wrap: wrap; gap: 3px 12px;
-  padding: 8px 10px 10px; background: #f4f4f4; color: #000; border-radius: 7px; box-shadow: 0 0 0 .5px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.18); }
-.etc .etc-links-graph .etc-vorschlag-box { background: #2a2a2a; color: #fff; }
-.etc .etc-vorschlag { font: inherit; font-size: 14px; color: inherit; background: none; border: 0; padding: 1px 0; cursor: pointer; }
-.etc .etc-vorschlag:hover { text-decoration: underline; text-underline-offset: 2px; }
+.etc .etc-suche-box { flex: 1 1 auto; display: flex; align-items: center; gap: 6px; min-width: 0; margin-left: -11px; height: 28px; padding: 0 8px 0 9px;
+  background: #fff; border: 1px solid #c6c6c6; border-radius: 7px; box-shadow: inset 0 1px 1px rgba(0,0,0,.04); }
+.etc .etc-suche-box:focus-within { border-color: #7aa7f0; box-shadow: 0 0 0 3px rgba(42,110,232,.38); }
+.etc .etc-suche-box[hidden], .etc .etc-suche-fertig[hidden], .etc .etc-suche-loesch[hidden], .etc .etc-wahl-knopf[hidden] { display: none; }
+.etc .etc-lupe { flex: 0 0 auto; display: flex; color: #8a8a8a; }
+.etc .etc-suche-kopf { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 14px; line-height: 20px; color: #000; background: none; border: 0; padding: 0; outline: none;
+  -webkit-appearance: none; appearance: none; }
+.etc .etc-suche-kopf::placeholder { color: #9a9a9a; }
+.etc .etc-suche-zahl { flex: 0 0 auto; color: #8a8a8a; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 250; }
+.etc .etc-suche-loesch { flex: 0 0 auto; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; padding: 0 0 1px; border: 0; border-radius: 50%;
+  background: #b4b4b4; color: #fff; font: inherit; font-size: 12px; line-height: 1; cursor: pointer; }
+.etc .etc-suche-loesch:hover { background: #8a8a8a; }
+.etc .etc-suche-fertig { flex: 0 0 auto; font: inherit; font-size: 14px; line-height: 20px; padding: 3px 12px; color: #000; background: #fff; border: 1px solid #c6c6c6;
+  border-radius: 6px; cursor: pointer; box-shadow: 0 .5px 1px rgba(0,0,0,.08); }
+.etc .etc-suche-fertig:active { background: #e8e8e8; }
+.etc .etc-links-graph .etc-suche-box, .etc .etc-links-graph .etc-suche-fertig { background: #262626; border-color: #444; }
+.etc .etc-links-graph .etc-suche-kopf, .etc .etc-links-graph .etc-suche-fertig { color: #fff; }
 .etc .etc-impressum-angaben { margin-top: 2em; }
 .etc .etc-ueber .etc-impressum-angaben p { margin: 0 0 0.3em; }
 .etc .etc-nichts { padding: 18px var(--rand); color: var(--grau); font-style: italic; }
@@ -176,7 +184,7 @@ body { margin: 0; background: #fff; }
 
 /* Grau etwas leichter */
 .etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
-.etc .etc-leeren, .etc .etc-vorschlag { font-weight: 250; }
+.etc .etc-leeren { font-weight: 250; }
 .etc .etc-text strong, .etc .etc-text th { font-weight: 500; }
 .etc, .etc * { font-variation-settings: "FLAR" 100; }
 </style></head>
@@ -282,17 +290,22 @@ body { margin: 0; background: #fff; }
   wahlListe.appendChild(el('div', 'etc-wahl-trenner'));
   var suchPunkt = el('button', 'etc-wahl-punkt', 'suchen'); suchPunkt.type = 'button'; suchPunkt.setAttribute('data-wert', '__suche');
   wahlListe.appendChild(suchPunkt);
-  var sucheFeld = el('input', 'etc-suche-kopf'); sucheFeld.type = 'search'; sucheFeld.placeholder = 'suchen'; sucheFeld.setAttribute('aria-label', 'suchen'); sucheFeld.hidden = true;
-  var vorEl = el('div', 'etc-vorschlag-box'), vorDaten = []; vorEl.hidden = true;
-  try { vorDaten = JSON.parse(quelle.querySelector('.etc-vorschlaege').getAttribute('data-v')); } catch (e) { vorDaten = []; }
-  vorDaten.forEach(function (w) { var b2 = el('button', 'etc-vorschlag', w); b2.type = 'button'; b2.setAttribute('data-vorschlag', w); vorEl.appendChild(b2); });
-  kopf.appendChild(sucheFeld); kopf.appendChild(vorEl);
+  /* Suchleiste im Look der Safari-Suche (⌘F): Lupe, Feld, Trefferzahl, „Fertig“; Treffer als Liste, keine Vorschläge */
+  var sucheBox = el('div', 'etc-suche-box'); sucheBox.hidden = true;
+  var lupe = el('span', 'etc-lupe'); lupe.setAttribute('aria-hidden', 'true');
+  lupe.innerHTML = '<svg viewBox="0 0 16 16" width="13" height="13"><circle cx="6.6" cy="6.6" r="4.9" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.2 10.2 14.5 14.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  var sucheFeld = el('input', 'etc-suche-kopf'); sucheFeld.type = 'text'; sucheFeld.placeholder = 'suchen'; sucheFeld.setAttribute('aria-label', 'suchen');
+  sucheFeld.setAttribute('autocomplete', 'off'); sucheFeld.setAttribute('spellcheck', 'false');
+  var zahl = el('span', 'etc-suche-zahl', '');
+  var loesch = el('button', 'etc-suche-loesch', '×'); loesch.type = 'button'; loesch.title = 'Suche leeren'; loesch.hidden = true;
+  sucheBox.appendChild(lupe); sucheBox.appendChild(sucheFeld); sucheBox.appendChild(zahl); sucheBox.appendChild(loesch);
+  var fertig = el('button', 'etc-suche-fertig', 'Fertig'); fertig.type = 'button'; fertig.hidden = true;
+  kopf.appendChild(sucheBox); kopf.appendChild(fertig);
   kopf.appendChild(wahlKnopf); kopf.appendChild(wahlListe);
   function suche(q) {
     q = (q || '').trim().toLowerCase();
-    if (!q) { waehle('index'); return; }
+    if (!q) { zeigeListe('index'); zahl.textContent = ''; return; }
     zeigeListe('index');
-    wahlKnopf.textContent = 'suche: ' + q;
     var alle = wahlListe.querySelectorAll('.etc-wahl-punkt');
     for (var j = 0; j < alle.length; j++) alle[j].classList.remove('etc-aktiv');
     var worte = q.split(/\s+/), treffer = 0;
@@ -308,39 +321,33 @@ body { margin: 0; background: #fff; }
       var z = secs2[s].querySelector('h2 .etc-grau'); if (z) z.textContent = sicht;
       treffer += sicht;
     }
+    zahl.textContent = treffer ? (treffer === 1 ? '1 Treffer' : treffer + ' Treffer') : 'keine Treffer';
     if (!treffer) { var nix = el('p', 'etc-nichts', 'nichts gefunden für „' + q + '“'); ihalt.appendChild(nix); }
   }
-  var sucheZeit = null;
+  var sucheZeit = null, sucheAn = false;
   function sucheModus(an) {
-    wahlKnopf.hidden = an; sucheFeld.hidden = !an; wahlListe.hidden = true;
-    vorEl.hidden = !an || !!sucheFeld.value;
-    if (an) sucheFeld.focus();
+    sucheAn = an;
+    wahlKnopf.hidden = an; sucheBox.hidden = !an; fertig.hidden = !an; wahlListe.hidden = true;
+    if (an) { sucheFeld.focus(); sucheFeld.select(); }
   }
   sucheFeld.addEventListener('input', function () {
-    vorEl.hidden = !!sucheFeld.value;
+    loesch.hidden = !sucheFeld.value;
     clearTimeout(sucheZeit);
-    sucheZeit = setTimeout(function () { if (sucheFeld.value.trim()) suche(sucheFeld.value); else zeigeListe('index'); }, 150);
+    sucheZeit = setTimeout(function () { suche(sucheFeld.value); }, 120);
   });
-  sucheFeld.addEventListener('focus', function () { vorEl.hidden = !!sucheFeld.value; });
   sucheFeld.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Enter') { suche(sucheFeld.value); vorEl.hidden = true; sucheFeld.blur(); }
-    if (ev.key === 'Escape') { sucheFeld.value = ''; waehle('index'); }
+    if (ev.key === 'Enter') { clearTimeout(sucheZeit); suche(sucheFeld.value); }
+    if (ev.key === 'Escape') { waehle('index'); }
   });
-  sucheFeld.addEventListener('blur', function () {
-    setTimeout(function () {
-      if (document.activeElement === sucheFeld) return;
-      vorEl.hidden = true;
-      if (!sucheFeld.value.trim()) waehle('index');
-    }, 180);
-  });
-  vorEl.addEventListener('mousedown', function (ev) { ev.preventDefault(); });
-  vorEl.addEventListener('click', function (ev) {
-    var b2 = ev.target.closest('[data-vorschlag]'); if (!b2) return;
-    sucheFeld.value = b2.getAttribute('data-vorschlag'); suche(sucheFeld.value); vorEl.hidden = true;
+  loesch.addEventListener('click', function () { sucheFeld.value = ''; loesch.hidden = true; suche(''); sucheFeld.focus(); });
+  fertig.addEventListener('click', function () { waehle('index'); });
+  /* ⌘F / Strg+F öffnet die Suche der Seite */
+  document.addEventListener('keydown', function (ev) {
+    if ((ev.metaKey || ev.ctrlKey) && !ev.altKey && (ev.key === 'f' || ev.key === 'F')) { ev.preventDefault(); waehle('__suche'); }
   });
   function waehle(k) {
     if (k === '__suche') { sucheModus(true); return; }
-    if (sucheFeld) { sucheFeld.value = ''; sucheModus(false); }
+    if (sucheAn) { sucheFeld.value = ''; loesch.hidden = true; zahl.textContent = ''; sucheModus(false); }
     var b = wahlListe.querySelector('[data-wert="' + k + '"]');
     wahlKnopf.textContent = b ? b.textContent : k; wahlKnopf.setAttribute('aria-expanded', 'false');
     var alle = wahlListe.querySelectorAll('.etc-wahl-punkt');
