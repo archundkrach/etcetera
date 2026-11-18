@@ -208,13 +208,16 @@ html.nacht body { background: #000; }
   .etc .etc-tafel-kopf .etc-zurueck { justify-self: start; }
   .etc .etc-tafel-kopf .etc-tafel-knoepfe { justify-self: end; }
   .etc .etc-tafel-titel { font-size: 14px; text-align: center; }
-  /* mobil eine Stufe größer: 16 px überall (auch Menü, Index, Suche), Symbole minimal größer, Leiste etwas voller */
-  html .etc, html .etc *:not(.etc-suche-loesch) { font-size: 16px; }
-  .etc .etc-kopf { min-height: 64px; }
-  .etc .etc-zurueck svg { width: 19px; height: 17px; }
-  .etc .etc-sammel-knopf svg { width: 21px; height: 19px; }
-  .etc .etc-gen-symbol svg { width: 20px; height: 20px; }
-  .etc .etc-karte-zu svg, .etc .etc-bild-zu svg { width: 15px; height: 15px; }
+  /* Schrift bleibt 14 px; die Leiste wirkt über größere Symbole voller */
+  .etc .etc-kopf { min-height: 60px; }
+  .etc .etc-zurueck, .etc .etc-sammel-knopf { height: 36px; }
+  .etc .etc-zurueck svg { width: 24px; height: 21px; }
+  .etc .etc-sammel-knopf svg { width: 24px; height: 21px; }
+  .etc .etc-sammel-knopf { gap: 8px; }
+  .etc .etc-gen, .etc .etc-tafel-knoepfe .etc-karte-zu { height: 30px; }
+  .etc .etc-gen-symbol svg { width: 25px; height: 25px; }
+  .etc .etc-tafel-knoepfe .etc-karte-zu svg { width: 18px; height: 18px; }
+  .etc .etc-karte-kopf .etc-karte-zu svg { width: 18px; height: 18px; }
   .etc .etc-wahl-knopf { line-height: 24px; }
   .etc .etc-tafel-knoepfe { align-items: center; gap: 22px; }
   .etc .etc-gen { display: flex; align-items: center; justify-content: flex-end; height: 24px; padding: 0; }
