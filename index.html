@@ -163,17 +163,35 @@ html.nacht body { background: #000; }
 /* Startbildschirm rechts: derselbe Text wie unter „über“ */
 .etc .etc-tafel-leer { grid-column: 1 / -1; padding: 20px var(--rand) 40px calc(var(--rand) + var(--pos) + 16px); max-width: calc(48ch + 120px); }
 
+/* Sammlungssymbol und Zurück: nur mobil */
+.etc .etc-sammel-knopf, .etc .etc-zurueck { display: none; }
+.etc .etc-sammel-knopf { flex: 0 0 auto; align-items: center; gap: 6px; height: 28px; padding: 0 10px; font: inherit; font-size: 14px; color: var(--ink);
+  background: var(--feld); border: 1px solid var(--feldrand); border-radius: 6px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.etc .etc-sammel-knopf svg { display: block; }
+.etc .etc-zurueck { font: inherit; font-size: 14px; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; }
+@keyframes etc-puls { 0% { background: var(--ink); color: var(--grund); } 100% { background: var(--feld); color: var(--ink); } }
+.etc .etc-sammel-knopf.etc-puls { animation: etc-puls .7s ease-out; }
+
+/* Mobil: nur das Archiv (index, graph, tafel); die Sammlung ist eine eigene Ansicht */
 @media (max-width: 800px) {
   .etc { --rand: 18px; }
-  .etc .etc-buehne { display: block; height: auto; }
-  .etc .etc-links { height: 75vh; border-right: 0; border-bottom: 1px solid var(--linie); }
-  .etc .etc-tafel-bereich { min-height: 60vh; }
-  .etc .etc-tafel { grid-template-columns: 1fr; overflow: visible; }
+  .etc .etc-buehne { display: block; height: 100vh; height: 100dvh; }
+  .etc .etc-links { height: 100%; border-right: 0; }
+  .etc .etc-tafel-bereich { display: none; height: 100%; }
+  .etc.etc-zeige-sammlung .etc-links { display: none; }
+  .etc.etc-zeige-sammlung .etc-tafel-bereich { display: flex; }
+  .etc .etc-sammel-knopf[hidden] { display: none; }
+  .etc .etc-sammel-knopf:not([hidden]) { display: inline-flex; }
+  .etc .etc-zurueck { display: inline-block; flex: 0 0 auto; }
+  .etc .etc-tafel-titel { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .etc .etc-tafel { grid-template-columns: 1fr; }
   .etc .etc-karte-bild { border-right: 0; }
   .etc summary { grid-template-columns: var(--spalte) minmax(0, 1fr); }
   .etc .etc-typ { display: none; }
   .etc .etc-karte .etc-auf { padding-left: var(--rand); }
   .etc .etc-tafel-leer, .etc .etc-ueber { padding: 20px var(--rand); }
+  .etc .etc-karte .etc-bilder.etc-mehrere figure { max-width: 100%; }
+  .etc .etc-bild-zu { opacity: 1; }
 }
 
 /* Grau etwas leichter */
@@ -317,6 +335,11 @@ html.nacht body { background: #000; }
   var fertig = el('button', 'etc-suche-fertig', 'Fertig'); fertig.type = 'button'; fertig.hidden = true;
   kopf.appendChild(sucheBox); kopf.appendChild(fertig);
   kopf.appendChild(wahlKnopf); kopf.appendChild(wahlListe);
+  /* mobil: Symbol für die Sammlung neben dem Menü, zählt mit; ein Tipp öffnet die Sammlung */
+  var sammelKnopf = el('button', 'etc-sammel-knopf'); sammelKnopf.type = 'button'; sammelKnopf.title = 'zur Sammlung';
+  sammelKnopf.innerHTML = '<svg viewBox="0 0 18 16" width="17" height="15" aria-hidden="true"><rect x="1" y="4" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5 1.5h11.5V13" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>';
+  var sammelZahl = el('span', 'etc-sammel-zahl', '0'); sammelKnopf.appendChild(sammelZahl);
+  kopf.appendChild(sammelKnopf);
   function suche(q) {
     q = (q || '').trim().toLowerCase();
     if (!q) { zeigeListe('index'); zahl.textContent = ''; return; }
@@ -342,7 +365,7 @@ html.nacht body { background: #000; }
   var sucheZeit = null, sucheAn = false;
   function sucheModus(an) {
     sucheAn = an;
-    wahlKnopf.hidden = an; sucheBox.hidden = !an; fertig.hidden = !an; wahlListe.hidden = true;
+    wahlKnopf.hidden = an; sucheBox.hidden = !an; fertig.hidden = !an; wahlListe.hidden = true; sammelKnopf.hidden = an;
     if (an) { sucheFeld.focus(); sucheFeld.select(); }
   }
   sucheFeld.addEventListener('input', function () {
@@ -396,13 +419,17 @@ html.nacht body { background: #000; }
   var tgen = el('button', 'etc-leeren', 'erstellen'); tgen.type = 'button'; tgen.title = 'PDF aus der Sammlung erstellen';
   var tleer = el('button', 'etc-karte-zu', '×'); tleer.type = 'button'; tleer.title = 'Sammlung leeren';
   tknoepfe.appendChild(tgen); tknoepfe.appendChild(tleer);
-  tkopf.appendChild(ttitel); tkopf.appendChild(tknoepfe);
+  var zurueck = el('button', 'etc-zurueck', '← archiv'); zurueck.type = 'button'; zurueck.title = 'zurück ins Archiv';
+  tkopf.appendChild(zurueck); tkopf.appendChild(ttitel); tkopf.appendChild(tknoepfe);
   var tafelEl = el('div', 'etc-tafel');
   rechts.appendChild(tkopf); rechts.appendChild(tafelEl);
   buehne.appendChild(links); buehne.appendChild(rechts);
   root.appendChild(buehne);
   root.className += ' etc-js';
 
+  function zeigeSammlung(an) { root.classList.toggle('etc-zeige-sammlung', an); window.scrollTo(0, 0); }
+  sammelKnopf.addEventListener('click', function () { zeigeSammlung(true); });
+  zurueck.addEventListener('click', function () { zeigeSammlung(false); });
   var graphDa = false;
   function zeigeListe(k) {
     var istGraph = k === 'graph';
@@ -670,6 +697,7 @@ html.nacht body { background: #000; }
     }
     if (gbereich._markiere) gbereich._markiere(m);
     tknoepfe.style.visibility = aufTafel.length ? 'visible' : 'hidden';
+    sammelZahl.textContent = aufTafel.length;
     if (!aufTafel.length) {
       tafelEl.innerHTML = '';
       var leer = el('div', 'etc-tafel-leer');
@@ -701,7 +729,7 @@ html.nacht body { background: #000; }
     da.classList.remove('etc-neu-da'); void da.offsetWidth; da.classList.add('etc-neu-da');
     tafelEl.scrollTop = 0;
     aktualisiere();
-    if (window.innerWidth <= 800) rechts.scrollIntoView();
+    sammelKnopf.classList.remove('etc-puls'); void sammelKnopf.offsetWidth; sammelKnopf.classList.add('etc-puls');
   }
   /* Klick auf eine Zeile in der Liste legt sie auf die Tafel */
   ihalt.addEventListener('click', function (ev) {
