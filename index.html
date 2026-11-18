@@ -190,7 +190,7 @@ html.nacht body { background: #000; }
   .etc .etc-sammel-knopf:not([hidden]) { display: inline-flex; }
   .etc .etc-zurueck { display: inline-flex; }
   .etc .etc-gen-text { display: none; }
-  .etc .etc-gen-symbol { display: block; }
+  .etc .etc-gen-symbol { display: flex; }
   .etc .etc-gen { color: var(--ink); display: flex; align-items: center; }
   .etc .etc-tafel-knoepfe { gap: 20px; }
   .etc .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
@@ -203,27 +203,24 @@ html.nacht body { background: #000; }
   .etc .etc-sammel-knopf svg { width: 19px; height: 17px; }
   .etc .etc-sammel-knopf.etc-puls { animation: etc-puls-mobil .7s ease-out; }
   /* Sammlungsleiste: Titel etwas größer, Download und × gleich groß und mittig */
-  /* Sammlungsleiste: Archiv links, Titel mittig, Download und × rechts */
-  .etc .etc-tafel-kopf { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; }
-  .etc .etc-tafel-kopf .etc-zurueck { justify-self: start; }
-  .etc .etc-tafel-kopf .etc-tafel-knoepfe { justify-self: end; }
-  .etc .etc-tafel-titel { font-size: 14px; text-align: center; }
+  /* Sammlungsleiste: Archiv · sammlung Datum Uhrzeit · Download direkt dahinter · × ganz rechts */
+  .etc .etc-tafel-kopf { display: flex; gap: 16px; }
+  .etc .etc-tafel-titel { flex: 1 1 auto; font-size: 14px; }
+  .etc .etc-tafel-kopf .etc-tafel-knoepfe { flex: 0 0 auto; justify-content: flex-end; gap: 22px; }
   /* Schrift bleibt 14 px; die Leiste wirkt über größere Symbole voller */
   .etc .etc-kopf { min-height: 60px; }
   .etc .etc-zurueck, .etc .etc-sammel-knopf { height: 36px; }
-  .etc .etc-zurueck svg { width: 24px; height: 21px; }
-  .etc .etc-sammel-knopf svg { width: 24px; height: 21px; }
+  .etc .etc-zurueck svg { width: 25px; height: 22px; }
+  .etc .etc-sammel-knopf svg { width: 19px; height: 17px; }
   .etc .etc-sammel-knopf { gap: 8px; }
   .etc .etc-gen, .etc .etc-tafel-knoepfe .etc-karte-zu { height: 30px; }
-  .etc .etc-gen-symbol svg { width: 25px; height: 25px; }
+  .etc .etc-gen-symbol svg { width: 18px; height: 18px; }
   .etc .etc-tafel-knoepfe .etc-karte-zu svg { width: 18px; height: 18px; }
   .etc .etc-karte-kopf .etc-karte-zu svg { width: 18px; height: 18px; }
   .etc .etc-wahl-knopf { line-height: 24px; }
   .etc .etc-tafel-knoepfe { align-items: center; gap: 22px; }
-  .etc .etc-gen { display: flex; align-items: center; justify-content: flex-end; height: 24px; padding: 0; }
-  .etc .etc-tafel-knoepfe .etc-karte-zu { height: 24px; }
-  .etc .etc-uhr-zeit { display: none; }
-  .etc .etc-gen-symbol svg { width: 17px; height: 17px; }
+  .etc .etc-gen { display: flex; align-items: center; justify-content: flex-end; height: 30px; padding: 0; }
+  .etc .etc-tafel-knoepfe .etc-karte-zu { height: 30px; }
   .etc .etc-tafel-titel { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .etc .etc-tafel { grid-template-columns: 1fr; }
   .etc .etc-karte-bild { border-right: 0; }
@@ -247,6 +244,9 @@ html.nacht body { background: #000; }
 .etc .etc-darstellung button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin-right: 12px; cursor: pointer; }
 .etc .etc-darstellung button:hover { color: var(--grau); }
 .etc .etc-darstellung button.etc-aktiv { text-decoration: underline; text-underline-offset: 3px; }
+
+/* alle Symbole mit derselben feinen Linie, egal wie groß sie gezeichnet sind */
+.etc .etc-kopf svg *, .etc .etc-karte-zu svg *, .etc .etc-bild-zu svg * { vector-effect: non-scaling-stroke; stroke-width: 1.5px; }
 
 /* Nacht: schwarzer Grund, weiße Schrift (Klasse „nacht“ am html, gesetzt im Kopf) */
 .nacht .etc { --grund: #000; --ink: #fff; --linie: rgba(255,255,255,.5); --haar: rgba(255,255,255,.2);
@@ -446,13 +446,13 @@ html.nacht body { background: #000; }
   var rechts = el('div', 'etc-tafel-bereich');
   var tkopf = el('div', 'etc-kopf etc-tafel-kopf');
   var ttitel = el('span', 'etc-tafel-titel');
-  ttitel.appendChild(document.createTextNode('sammlung '));
+  ttitel.appendChild(document.createTextNode('Sammlung '));
   var uhr = el('span', 'etc-uhr'); ttitel.appendChild(uhr);
   function zwei(n) { return (n < 10 ? '0' : '') + n; }
   function stempel() {
     var d = new Date();
     var dat = zwei(d.getDate()) + '.' + zwei(d.getMonth() + 1) + '.' + d.getFullYear(), zeit = zwei(d.getHours()) + ':' + zwei(d.getMinutes()) + ':' + zwei(d.getSeconds());
-    return { text: 'sammlung ' + dat + ' ' + zeit, kurz: dat + ' ' + zeit,
+    return { text: 'Sammlung ' + dat + ' ' + zeit, kurz: dat + ' ' + zeit,
       datei: 'etcetera-sammlung-' + d.getFullYear() + '-' + zwei(d.getMonth() + 1) + '-' + zwei(d.getDate()) + '_' + zwei(d.getHours()) + '-' + zwei(d.getMinutes()) + '-' + zwei(d.getSeconds()) + '.pdf' };
   }
   var uhrDatum = el('span', 'etc-uhr-datum'), uhrZeit = el('span', 'etc-uhr-zeit'); uhr.appendChild(uhrDatum); uhr.appendChild(uhrZeit);
