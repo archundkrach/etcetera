@@ -208,6 +208,14 @@ html.nacht body { background: #000; }
   .etc .etc-tafel-kopf .etc-zurueck { justify-self: start; }
   .etc .etc-tafel-kopf .etc-tafel-knoepfe { justify-self: end; }
   .etc .etc-tafel-titel { font-size: 14px; text-align: center; }
+  /* mobil eine Stufe größer: 16 px überall (auch Menü, Index, Suche), Symbole minimal größer, Leiste etwas voller */
+  html .etc, html .etc *:not(.etc-suche-loesch) { font-size: 16px; }
+  .etc .etc-kopf { min-height: 64px; }
+  .etc .etc-zurueck svg { width: 19px; height: 17px; }
+  .etc .etc-sammel-knopf svg { width: 21px; height: 19px; }
+  .etc .etc-gen-symbol svg { width: 20px; height: 20px; }
+  .etc .etc-karte-zu svg, .etc .etc-bild-zu svg { width: 15px; height: 15px; }
+  .etc .etc-wahl-knopf { line-height: 24px; }
   .etc .etc-tafel-knoepfe { align-items: center; gap: 22px; }
   .etc .etc-gen { display: flex; align-items: center; justify-content: flex-end; height: 24px; padding: 0; }
   .etc .etc-tafel-knoepfe .etc-karte-zu { height: 24px; }
