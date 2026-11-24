@@ -881,15 +881,15 @@ html.nacht body { background: #000; }
   var suchPunkt = el('button', 'etc-wahl-punkt', 'suchen'); suchPunkt.type = 'button'; suchPunkt.setAttribute('data-wert', '__suche');
   function menuBauen() {
     wahlListe.innerHTML = '';
-    [[['ueber', 'über']],
-     [['index', 'index'], ['graph', 'graph']].concat(themen[schl('bilder')] ? [['tafel', 'tafel']] : []),
-     listenReiheVon(welt, 'menue').map(function (k) { return [k, themen[k].getAttribute('data-titel')]; })
-    ].forEach(function (gr, gi) {
-      if (gi > 0) wahlListe.appendChild(el('div', 'etc-wahl-trenner'));
+    /* oben suchen, unten über (Christian, 24.11.) */
+    wahlListe.appendChild(suchPunkt);
+    [[['index', 'index'], ['graph', 'graph']].concat(themen[schl('bilder')] ? [['tafel', 'tafel']] : []),
+     listenReiheVon(welt, 'menue').map(function (k) { return [k, themen[k].getAttribute('data-titel')]; }),
+     [['ueber', 'über']]
+    ].forEach(function (gr) {
+      wahlListe.appendChild(el('div', 'etc-wahl-trenner'));
       gr.forEach(function (o) { var b = el('button', 'etc-wahl-punkt', o[1]); b.type = 'button'; b.setAttribute('data-wert', o[0]); wahlListe.appendChild(b); });
     });
-    wahlListe.appendChild(el('div', 'etc-wahl-trenner'));
-    wahlListe.appendChild(suchPunkt);
   }
   menuBauen();
   /* Suchleiste im Look der Safari-Suche (⌘F): Lupe, Feld, Trefferzahl, „Fertig“; Treffer als Liste, keine Vorschläge */
