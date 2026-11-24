@@ -1466,7 +1466,7 @@ html.nacht body { background: #000; }
       var wz = Math.log(7200 * z / 256) / Math.LN2, belegt = [];
       P.forEach(function (p) {  /* unsere Punkte und ihre Beschriftung haben Vorrang vor den Städtenamen */
         var x = p.x * z + ox, y = p.y * z + oy;
-        if (p.k === 'projekt' || z / zFit >= 2.2) { var w = Math.min(p.t.length, 34) * 3.4; belegt.push([x - w, y + 6, x + w, y + 22]); }
+        if ((p.k === 'projekt' && welt === 'pr') || z / zFit >= 2.2) { var w = Math.min(p.t.length, 34) * 3.4; belegt.push([x - w, y + 6, x + w, y + 22]); }
       });
       ctx.font = '300 10.5px "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
       var stA = Math.min(1, Math.max(0, (z / zFit - 1.25) / 0.5));  /* Städte erst beim Hineinzoomen, sanft eingeblendet */
@@ -1482,6 +1482,7 @@ html.nacht body { background: #000; }
       var stufe = z / zFit;
       P.forEach(function (p, i) {
         var x = sx(p), y = sy(p); if (x < -20 || y < -20 || x > W + 20 || y > H + 20) return;
+        if (p.k === 'projekt' && welt !== 'pr') return;  /* eigene Projekte nur in „et cetera“ */
         var pr = p.k === 'projekt', r = pr ? 4.2 : 3.2, an = i === hover || markiert[p.id], weg = (filter && !filter[p.id]) || (welt === 'pr' && !prNah[p.id]);
         ctx.beginPath(); ctx.arc(x, y, r, 0, 6.2832);
         ctx.fillStyle = an ? 'rgb(' + F + ')' : 'rgba(' + F + ',' + (weg ? .12 : .82) + ')'; ctx.fill();
@@ -1495,7 +1496,8 @@ html.nacht body { background: #000; }
         return g(i) - g(j);
       }), frei2 = []; namenBox = [];
       reihe.forEach(function (i) {
-        var p = P[i], a = i === hover ? 1 : (welt === 'pr' && !prNah[p.id] ? 0 : filter ? (filter[p.id] ? 0.95 : 0) : (markiert[p.id] ? 0.95 : (p.k === 'projekt' ? 0.8 : Math.min(1, Math.max(0, (stufe - 2.2) / 0.8)) * 0.75)));
+        var p = P[i]; if (p.k === 'projekt' && welt !== 'pr') return;
+        var a = i === hover ? 1 : (welt === 'pr' && !prNah[p.id] ? 0 : filter ? (filter[p.id] ? 0.95 : 0) : (markiert[p.id] ? 0.95 : (p.k === 'projekt' ? 0.8 : Math.min(1, Math.max(0, (stufe - 2.2) / 0.8)) * 0.75)));
         if (a <= 0.02) return;
         var x = sx(p), y = sy(p); if (x < -80 || y < -20 || x > W + 80 || y > H + 20) return;
         var tx = p.t.length > 34 ? p.t.slice(0, 32) + '…' : p.t, w = ctx.measureText(tx).width / 2, bx = [x - w - 2, y + 7, x + w + 2, y + 22];
@@ -1528,8 +1530,7 @@ html.nacht body { background: #000; }
     var FILTER = [['alle', null],
       ['Umbau', function (q) { return hat(q, ['umbau', 'bestand', 'anbau']); }],
       ['Wohnen', nutz('Wohnen')], ['Kultur', nutz('Kultur')], ['Sakralbau', nutz('Sakralbau')],
-      ['Bildung', nutz('Bildung')], ['Arbeit', nutz('Arbeit')], ['Öffentlich', nutz('Öffentlich')],
-      ['Projekte', function (q, i) { return P[i].k === 'projekt' || prNah[P[i].id]; }]];
+      ['Bildung', nutz('Bildung')], ['Arbeit', nutz('Arbeit')], ['Öffentlich', nutz('Öffentlich')]];
     var jahre = KD.punkte.map(function (q) { return q[6]; }).filter(function (j) { return j > 0; });
     var J0 = Math.floor(Math.min.apply(null, jahre.concat([1900])) / 50) * 50, J1 = new Date().getFullYear();
     var thema = 0, von = J0, bis = J1;
@@ -1568,7 +1569,7 @@ html.nacht body { background: #000; }
     function treffer(ev) {
       var r = cv.getBoundingClientRect(), mx = ev.clientX - r.left, my = ev.clientY - r.top, best = -1, bd = 144;
       for (var nb = namenBox.length - 1; nb >= 0; nb--) { var o = namenBox[nb][1]; if (mx >= o[0] && mx <= o[2] && my >= o[1] && my <= o[3]) return namenBox[nb][0]; }
-      P.forEach(function (p, i) { var dx = sx(p) - mx, dy = sy(p) - my, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } });
+      P.forEach(function (p, i) { if (p.k === 'projekt' && welt !== 'pr') return; var dx = sx(p) - mx, dy = sy(p) - my, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = i; } });
       return best;
     }
     function zeigeInfo(h) { info.textContent = h >= 0 ? P[h].t + ' · ' + P[h].th : stand; }
