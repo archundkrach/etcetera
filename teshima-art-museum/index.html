@@ -64,6 +64,9 @@ html.nacht body { background: #000; }
 .etc .etc-karte .etc-bilder figure { position: relative; max-width: 100%; }
 .etc .etc-karte .etc-bilder.etc-mehrere figure { max-width: calc(50% - 6px); }
 .etc .etc-karte .etc-bilder.etc-mehrere img { max-height: 30vh; }
+.etc .etc-karte .etc-bilder figure.etc-gross { flex-basis: 100%; max-width: 100% !important; }
+.etc .etc-karte .etc-bilder figure.etc-gross img { width: 100%; height: auto; max-height: none !important; }
+.etc .etc-karte .etc-bilder figure.etc-gross .etc-bild-zu { opacity: 1; }
 .etc .etc-bild-zu { position: absolute; top: 0; right: 0; display: flex; font: inherit; line-height: 1; padding: 5px; color: var(--ink);
   background: var(--grund); border: 0; cursor: pointer; opacity: 0; transition: opacity .15s; }
 .etc .etc-karte .etc-bilder figure:hover .etc-bild-zu { opacity: 1; }
