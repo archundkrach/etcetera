@@ -1266,14 +1266,15 @@ html.nacht body { background: #000; }
         if (p.k === 'projekt' || z / zFit >= 2.2) { var w = Math.min(p.t.length, 34) * 3.4; belegt.push([x - w, y + 6, x + w, y + 22]); }
       });
       ctx.font = '300 10.5px "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      for (var si = 0; si < ST.length; si++) {
+      var stA = Math.min(1, Math.max(0, (z / zFit - 1.25) / 0.5));  /* Städte erst beim Hineinzoomen, sanft eingeblendet */
+      for (var si = 0; stA > 0 && si < ST.length; si++) {
         var s = ST[si]; if (s[3] > wz + (s.nah ? 2.5 : 0.4)) continue;
         var cx = s[1] * z + ox, cy = s[2] * z + oy; if (cx < -10 || cy < -10 || cx > W + 10 || cy > H + 10) continue;
         var bw = ctx.measureText(s[0]).width, bx = [cx - 3, cy - 7, cx + 6 + bw, cy + 7], frei = true;
         for (var bi = 0; bi < belegt.length && frei; bi++) { var o = belegt[bi]; if (bx[0] < o[2] && bx[2] > o[0] && bx[1] < o[3] && bx[3] > o[1]) frei = false; }
         if (!frei) continue; belegt.push(bx);
-        ctx.fillStyle = 'rgba(' + F + ',.3)'; ctx.fillRect(cx - 1, cy - 1, 2, 2);
-        ctx.fillStyle = 'rgba(' + F + ',.42)'; ctx.fillText(s[0], cx + 4, cy);
+        ctx.fillStyle = 'rgba(' + F + ',' + (.3 * stA) + ')'; ctx.fillRect(cx - 1, cy - 1, 2, 2);
+        ctx.fillStyle = 'rgba(' + F + ',' + (.42 * stA) + ')'; ctx.fillText(s[0], cx + 4, cy);
       }
       var stufe = z / zFit;
       P.forEach(function (p, i) {
