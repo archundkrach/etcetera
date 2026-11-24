@@ -126,6 +126,15 @@ html.nacht body { background: #000; }
 .etc .etc-karte-filter { position: absolute; top: 10px; left: var(--rand); right: var(--rand); display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; }
 .etc .etc-karte-filter button { pointer-events: auto; font: inherit; font-size: 13px; color: var(--grau); background: none; border: 0; padding: 2px 0; cursor: pointer; }
 .etc .etc-karte-filter button.etc-aktiv { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.etc .etc-karte-zeit { flex-basis: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; margin-top: 4px; }
+.etc .etc-karte-zeit-spur { position: relative; width: min(260px, 60%); height: 18px; }
+.etc .etc-karte-zeit-spur::before { content: ""; position: absolute; left: 0; right: 0; top: 8px; height: 1px; background: var(--grau); }
+.etc .etc-karte-zeit-spur input { position: absolute; left: 0; width: 100%; top: 0; height: 18px; margin: 0; background: none; pointer-events: none; -webkit-appearance: none; appearance: none; }
+.etc .etc-karte-zeit-spur input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: auto; width: 11px; height: 11px; border-radius: 50%; background: var(--ink); border: 0; cursor: pointer; }
+.etc .etc-karte-zeit-spur input::-moz-range-thumb { pointer-events: auto; width: 11px; height: 11px; border-radius: 50%; background: var(--ink); border: 0; cursor: pointer; }
+.etc .etc-karte-zeit-spur input::-webkit-slider-runnable-track { background: none; }
+.etc .etc-karte-zeit-spur input::-moz-range-track { background: none; }
+.etc .etc-karte-zeit-text { font-size: 13px; color: var(--grau); font-variant-numeric: tabular-nums; }
 .etc .etc-graph { position: relative; }
 .etc .etc-graph canvas { display: block; touch-action: none; cursor: grab; }
 .etc .etc-graph-info { position: absolute; left: var(--rand); right: var(--rand); bottom: 14px; color: var(--grau); pointer-events: none; }
