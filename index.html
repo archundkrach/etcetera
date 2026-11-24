@@ -1120,6 +1120,12 @@ html.nacht body { background: #000; }
   wahlKnopf.addEventListener('click', function (ev) { ev.stopPropagation(); wahlPlatz(); wahlListe.hidden = !wahlListe.hidden; wahlKnopf.setAttribute('aria-expanded', String(!wahlListe.hidden));  });
   wahlListe.addEventListener('click', function (ev) { var b = ev.target.closest('[data-wert]'); if (b) waehle(b.getAttribute('data-wert')); });
   document.addEventListener('click', function (ev) { if (!wahlListe.hidden && !kopf.contains(ev.target)) wahlListe.hidden = true; });
+  /* Doppelklick auf die Menüleiste öffnet die Suche (nicht im Suchfeld selbst, dort markiert er Wörter) */
+  kopf.addEventListener('dblclick', function (ev) {
+    if (sucheAn || sucheBox.contains(ev.target) || fertig.contains(ev.target) || wahlListe.contains(ev.target)) return;
+    ev.preventDefault(); if (window.getSelection) window.getSelection().removeAllRanges();
+    waehle('__suche');
+  });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') wahlListe.hidden = true; });
   var ihalt = el('div', 'etc-ihalt');
   var gbereich = el('div', 'etc-graph-bereich');
