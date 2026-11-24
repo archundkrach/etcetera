@@ -27,6 +27,8 @@ html.nacht body { background: #000; }
 .etc .etc-nr, .etc .etc-typ, .etc .etc-pos { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .etc .etc-typ { color: var(--grau); }
 .etc summary:hover .etc-ti { color: var(--grau); }
+.etc li.etc-such-wahl > details > summary { background: rgba(0,0,0,.07); }
+.nacht .etc li.etc-such-wahl > details > summary { background: rgba(255,255,255,.12); }
 .etc .etc-auf-tafel > details > summary { background: var(--ink); color: var(--grund); }
 .etc .etc-auf-tafel > details > summary .etc-typ, .etc .etc-auf-tafel > details > summary .etc-nr { color: rgba(255,255,255,.62); }
 .etc .etc-auf-tafel > details > summary:hover .etc-ti { color: inherit; }
@@ -994,7 +996,9 @@ html.nacht body { background: #000; }
   var sammelZahl = el('span', 'etc-sammel-zahl', '0'); sammelKnopf.appendChild(sammelZahl);
   kopf.appendChild(sammelKnopf);
   function suche(q) {
+    if (typeof suchMarke === 'function') suchMarke(null);
     q = (q || '').trim().toLowerCase();
+    letzteSuche = q;
     if (!q) { zeigeListe('index'); zahl.textContent = ''; return; }
     zeigeListe('index');
     var alle = wahlListe.querySelectorAll('.etc-wahl-punkt');
@@ -1026,9 +1030,31 @@ html.nacht body { background: #000; }
     clearTimeout(sucheZeit);
     sucheZeit = setTimeout(function () { suche(sucheFeld.value); }, 120);
   });
+  /* Pfeiltasten wandern durch die Treffer, Enter legt den gewählten Eintrag auf die Tafel; der Fokus bleibt im Suchfeld */
+  var suchWahl = null, letzteSuche = '';
+  function suchTreffer() {
+    return Array.prototype.filter.call(ihalt.querySelectorAll('.etc-thema li[data-id]'), function (li) { return li.offsetParent !== null; });
+  }
+  function suchMarke(li) {
+    if (suchWahl) suchWahl.classList.remove('etc-such-wahl');
+    suchWahl = li || null;
+    if (suchWahl) { suchWahl.classList.add('etc-such-wahl'); suchWahl.scrollIntoView({ block: 'nearest' }); }
+  }
   sucheFeld.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Enter') { clearTimeout(sucheZeit); suche(sucheFeld.value); }
-    if (ev.key === 'Escape') { waehle('index'); }
+    if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+      ev.preventDefault();
+      clearTimeout(sucheZeit); if (sucheFeld.value.trim().toLowerCase() !== letzteSuche) suche(sucheFeld.value);
+      var t = suchTreffer(); if (!t.length) return;
+      var i = suchWahl ? t.indexOf(suchWahl) : -1;
+      i = ev.key === 'ArrowDown' ? Math.min(i + 1, t.length - 1) : i - 1;
+      suchMarke(i >= 0 ? t[i] : null);
+      return;
+    }
+    if (ev.key === 'Enter') {
+      if (suchWahl && suchWahl.offsetParent !== null) { ev.preventDefault(); tafel(suchWahl.getAttribute('data-id')); return; }
+      clearTimeout(sucheZeit); suche(sucheFeld.value);
+    }
+    if (ev.key === 'Escape') { suchMarke(null); waehle('index'); }
   });
   loesch.addEventListener('click', function () { sucheFeld.value = ''; loesch.hidden = true; suche(''); sucheFeld.focus(); });
   fertig.addEventListener('click', function () { waehle('index'); });
