@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Collective Learning · etcetera</title><meta name="description" content="This text is based on Theresa Zschäbitz’s presentation at Science Day 2024, “ALLIANCES,” organized by the Junior Professorship Act of Building at RWTH Aachen…"><link rel="canonical" href="https://archundkrach.github.io/etcetera/collective-learning/"><meta property="og:title" content="Collective Learning"><meta property="og:description" content="This text is based on Theresa Zschäbitz’s presentation at Science Day 2024, “ALLIANCES,” organized by the Junior Professorship Act of Building at RWTH Aachen…"><meta property="og:type" content="article"><meta property="og:image" content="https://archundkrach.github.io/etcetera/img/fundus-collective-learning-werkstatt.jpg"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" media="(prefers-color-scheme: light)"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32-dunkel.png" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><script>(function(){var m='auto';try{m=localStorage.getItem('etc-modus')||'auto'}catch(e){}var h=new Date().getHours();var n=m==='dunkel'||(m==='auto'&&(h<9||h>=18));document.documentElement.classList.toggle('nacht',n);})();</script><style>
+body { margin: 0; background: #fff; }
+html.nacht body { background: #000; }
+/* Schrift: Commissioner (SIL Open Font License), variabel mit Flare-Achse, selbst gehostet unter fonts/ */
+@font-face { font-family: "Commissioner Flare"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("../fonts/commissioner-latin-full-normal.woff2") format("woff2-variations"); }
+.etc { --grund: #fff; --ink: #000; --grau: #8a8a8a; --linie: rgba(0,0,0,.6); --haar: rgba(0,0,0,.14);
+  --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 28px;
+  font: 300 14px/1.45 "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.005em; color: var(--ink); background: var(--grund);
+  -webkit-font-smoothing: antialiased; }
+.etc * { box-sizing: border-box; }
+.etc p, .etc h2, .etc ol, .etc figure, .etc dl, .etc dd { margin: 0; padding: 0; }
+.etc a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--haar); }
+.etc a:hover { border-bottom-color: var(--ink); }
+.etc .etc-grau { color: var(--grau); font-weight: 400; }
+.etc .etc-x { display: inline-block; background: var(--ink); white-space: pre; height: 1em; vertical-align: -0.12em; }
+.etc .etc-intro { display: none; }
+
+/* Listen: Zeilen mit Linie, Titel kursiv in Versalien */
+.etc .etc-thema h2 { font: inherit; color: var(--grau); padding: 20px var(--rand) 8px; }
+.etc ol { list-style: none; }
+.etc .etc-thema > ol > li { border-bottom: 1px solid var(--linie); }
+.etc summary { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr) auto; gap: 0 16px; padding: 7px var(--rand); cursor: pointer; list-style: none; }
+.etc summary::-webkit-details-marker { display: none; }
+.etc .etc-ti { min-width: 0; }
+.etc .etc-nr, .etc .etc-typ, .etc .etc-pos { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.etc .etc-typ { color: var(--grau); }
+.etc summary:hover .etc-ti { color: var(--grau); }
+.etc li.etc-such-wahl:not(.etc-auf-tafel) > details > summary { background: rgba(0,0,0,.07); }
+.nacht .etc li.etc-such-wahl:not(.etc-auf-tafel) > details > summary { background: rgba(255,255,255,.12); }
+.etc .etc-auf-tafel > details > summary { background: var(--ink); color: var(--grund); }
+.etc .etc-auf-tafel > details > summary .etc-typ, .etc .etc-auf-tafel > details > summary .etc-nr { color: rgba(255,255,255,.62); }
+.etc .etc-auf-tafel > details > summary:hover .etc-ti { color: inherit; }
+
+/* Inhalte aus den Notizen: eine Schrift, ruhige Abstände */
+.etc .etc-auf > * + * { margin-top: 14px; }
+.etc details > .etc-auf { padding: 4px var(--rand) 24px calc(var(--rand) + var(--spalte) + 16px); }
+.etc .etc-dl { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr); gap: 3px 16px; }
+.etc .etc-dl dt { color: var(--grau); }
+.etc .etc-bez { }
+.etc .etc-text { max-width: 62ch; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.etc .etc-text > :first-child { margin-top: 0; }
+.etc .etc-text p { margin: 0 0 0.75em; }
+.etc .etc-text h2, .etc .etc-text h3, .etc .etc-text h4 { font: inherit; font-weight: 500; margin: 1.4em 0 0.35em; padding: 0; }
+.etc .etc-text strong { font-weight: 600; }
+.etc .etc-text code { font: inherit; }
+.etc .etc-text ul { list-style: none; margin: 0 0 0.75em; padding: 0; }
+.etc .etc-text li { position: relative; padding-left: 1.1em; margin: 0 0 0.2em; }
+.etc .etc-text li::before { content: "–"; position: absolute; left: 0; color: var(--grau); }
+.etc .etc-text table { border-collapse: collapse; margin: 0.4em 0 1em; }
+.etc .etc-text th, .etc .etc-text td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--haar); }
+.etc .etc-text th { font-weight: 600; border-bottom-color: var(--linie); }
+.etc .etc-text .tw { overflow-x: auto; }
+.etc .etc-text .box { display: inline-block; width: 0.7em; height: 0.7em; border: 1px solid; margin-right: 6px; }
+.etc .etc-text .box.done { background: var(--ink); }
+.etc figure img { display: block; max-width: 100%; height: auto; }
+/* Bilder einer Notiz: untereinander, rechtsbündig, hohe Bilder kleiner */
+.etc .etc-bilder { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.etc .etc-bilder img, .etc .etc-karte-bild figure img { width: auto; max-height: 46vh; }
+.etc .etc-karte-bild figure { display: flex; justify-content: flex-end; }
+/* in der Sammlung rechts: linksbündig; mehrere Bilder einer Notiz nebeneinander, jedes einzeln mit × herausnehmbar */
+.etc .etc-karte .etc-bilder { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+.etc .etc-karte .etc-bilder figure { position: relative; max-width: 100%; }
+.etc .etc-karte .etc-bilder.etc-mehrere figure { max-width: calc(50% - 6px); }
+.etc .etc-karte .etc-bilder.etc-mehrere img { max-height: 30vh; }
+.etc .etc-bild-zu { position: absolute; top: 0; right: 0; display: flex; font: inherit; line-height: 1; padding: 5px; color: var(--ink);
+  background: var(--grund); border: 0; cursor: pointer; opacity: 0; transition: opacity .15s; }
+.etc .etc-karte .etc-bilder figure:hover .etc-bild-zu { opacity: 1; }
+@media (hover: none) { .etc .etc-bild-zu { opacity: 1; } }
+.etc .etc-karte.etc-karte-bild figure { justify-content: flex-start; }
+.etc .etc-ueber { padding: 20px var(--rand) 20px calc(var(--rand) + var(--spalte) + 16px); max-width: calc(48ch + 160px); }
+.etc .etc-ueber p, .etc .etc-tafel-leer p { font-size: 14px; line-height: 1.45; margin: 0 0 0.9em; }
+.etc .etc-ueber .etc-intro-hinweis, .etc .etc-tafel-leer .etc-intro-hinweis { color: var(--grau); margin-top: 1.6em; }
+/* Hinweise nur für das Handy (z. B. Wischen zwischen Fundus und Sammlung) */
+.etc .etc-nur-mobil { display: none; }
+@media (max-width: 800px) { .etc .etc-nur-mobil { display: block; } }
+
+/* Bühne (nur mit JavaScript; ohne steht alles untereinander): immer in der Mitte geteilt */
+.etc.etc-js .etc-quelle { display: none; }
+.etc .etc-buehne { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; }
+.etc .etc-links { min-height: 0; border-right: 1px solid var(--linie); background: var(--grund); color: var(--ink); transition: background-color .25s, color .25s; }
+.etc .etc-liste-bereich { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.etc .etc-kopf { position: relative; display: flex; align-items: center; gap: 16px; min-height: 46px; padding: 0 var(--rand); flex: 0 0 auto; border-bottom: 1px solid var(--linie); }
+.etc .etc-ihalt { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 80px; }
+.etc .etc-ihalt, .etc .etc-tafel { scrollbar-width: none; -ms-overflow-style: none; }
+.etc .etc-ihalt::-webkit-scrollbar, .etc .etc-tafel::-webkit-scrollbar { display: none; }
+.etc .etc-ihalt .etc-thema:first-child h2 { padding-top: 18px; }
+
+/* Menü: Auswahlfeld wie ein Systemfeld; die Liste klappt an seiner Oberkante nach unten auf */
+.etc .etc-wahl-knopf { flex: 1 1 auto; display: block; width: calc(100% + 11px); margin-left: -11px; font: inherit; line-height: 20px; text-align: left; cursor: default;
+  color: var(--ink); background: var(--feld) no-repeat right 9px center / 8px 12px; border: 1px solid var(--feldrand); border-radius: 6px; padding: 3px 28px 3px 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1 4.5 4 1.5 7 4.5M1 7.5 4 10.5 7 7.5' fill='none' stroke='%23333' stroke-width='1.3'/%3E%3C/svg%3E"); }
+.etc button, .etc input { -webkit-tap-highlight-color: transparent; }
+.etc button:focus, .etc button:focus-visible { outline: none; }
+.etc .etc-wahl-liste { position: absolute; top: 10px; left: calc(var(--rand) - 11px); right: var(--rand); z-index: 30; padding: 5px 5px 10px;
+  background: #f4f4f4; color: #000; border-radius: 7px; box-shadow: 0 0 0 .5px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.18); font-size: 14px; line-height: 1.25; }
+.etc .etc-wahl-liste[hidden] { display: none; }
+.etc .etc-wahl-trenner { height: 1px; margin: 5px 9px; background: rgba(0,0,0,.14); }
+.etc .etc-suche-box { flex: 1 1 auto; display: flex; align-items: center; gap: 6px; min-width: 0; margin-left: -11px; height: 28px; padding: 0 8px 0 9px;
+  background: #fff; border: 1px solid #c6c6c6; border-radius: 7px; box-shadow: inset 0 1px 1px rgba(0,0,0,.04); }
+@media (min-width: 801px) { .etc .etc-suche-box:focus-within { border-color: #7aa7f0; box-shadow: 0 0 0 3px rgba(42,110,232,.38); } }
+.etc .etc-fertig-x { display: none; }
+.etc .etc-suche-box[hidden], .etc .etc-suche-fertig[hidden], .etc .etc-suche-loesch[hidden], .etc .etc-wahl-knopf[hidden] { display: none; }
+.etc .etc-lupe { flex: 0 0 auto; display: flex; color: #8a8a8a; }
+.etc .etc-suche-kopf { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 14px; line-height: 20px; color: #000; background: none; border: 0; padding: 0; outline: none;
+  -webkit-appearance: none; appearance: none; }
+.etc .etc-suche-kopf::placeholder { color: #9a9a9a; }
+.etc .etc-suche-zahl { flex: 0 0 auto; color: #8a8a8a; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 250; }
+.etc .etc-suche-loesch { flex: 0 0 auto; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; padding: 0 0 1px; border: 0; border-radius: 50%;
+  background: #b4b4b4; color: #fff; font: inherit; font-size: 12px; line-height: 1; cursor: pointer; }
+.etc .etc-suche-loesch:hover { background: #8a8a8a; }
+.etc .etc-suche-fertig { flex: 0 0 auto; font: inherit; font-size: 14px; line-height: 20px; padding: 3px 12px; color: #000; background: #fff; border: 1px solid #c6c6c6;
+  border-radius: 6px; cursor: pointer; box-shadow: 0 .5px 1px rgba(0,0,0,.08); }
+.etc .etc-suche-fertig:active { background: #e8e8e8; }
+.etc .etc-impressum-angaben { margin-top: 2em; }
+.etc .etc-ueber .etc-impressum-angaben p { margin: 0 0 0.3em; }
+.etc .etc-nichts { padding: 18px var(--rand); color: var(--grau); font-style: italic; }
+.etc .etc-wahl-punkt { position: relative; display: block; width: 100%; font: inherit; color: inherit; background: none; border: 0; border-radius: 4px;
+  padding: 3px 10px 3px 10px; text-align: left; cursor: default; }
+.etc .etc-wahl-punkt.etc-aktiv { text-decoration: underline; text-underline-offset: 2px; }
+.etc .etc-wahl-punkt:hover { background: #2a6ee8; color: #fff; }
+
+/* Graph */
+.etc .etc-graph-bereich { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
+.etc .etc-karte-filter { position: absolute; top: 10px; left: var(--rand); right: var(--rand); display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; }
+.etc .etc-karte-filter button { pointer-events: auto; font: inherit; font-size: 13px; color: var(--grau); background: none; border: 0; padding: 2px 0; cursor: pointer; }
+.etc .etc-karte-filter button.etc-aktiv { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.etc .etc-graph { position: relative; }
+.etc .etc-graph canvas { display: block; touch-action: none; cursor: grab; }
+.etc .etc-graph-info { position: absolute; left: var(--rand); right: var(--rand); bottom: 14px; color: var(--grau); pointer-events: none; }
+
+/* Tafel links: alle Bilder untereinander über die ganze Breite, ohne Beschriftung; in der Sammlung mit Nummer */
+.etc .etc-raster { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; padding: 18px var(--rand) 0; }
+.etc .etc-raster-bild { position: relative; display: block; max-width: 100%; margin: 0; padding: 0; font: inherit; color: inherit; text-align: left;
+  background: none; border: 0; cursor: pointer; }
+.etc .etc-raster-bild img { display: block; width: auto; height: auto; max-width: 100%; max-height: 52vh; }
+/* mal kleiner: wechselnde Breiten, alles rechtsbündig */
+.etc .etc-raster-bild:nth-child(4n+2) { max-width: 72%; }
+.etc .etc-raster-bild:nth-child(4n+3) { max-width: 86%; }
+.etc .etc-raster-bild:nth-child(4n) { max-width: 58%; }
+.etc .etc-raster-bild:hover img { opacity: .82; }
+.etc .etc-raster-nr { position: absolute; top: 0; left: 0; padding: 1px 6px; background: var(--ink); color: var(--grund); font-variant-numeric: tabular-nums; }
+.etc .etc-raster-nr:empty { display: none; }
+.etc .etc-raster-bild.etc-auf-tafel img { outline: 1px solid var(--ink); outline-offset: -1px; }
+.etc .etc-raster-ti { display: block; width: 0; min-width: 100%; padding-top: 3px; color: var(--grau); font-weight: 250; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; }
+.etc .etc-raster-bild:hover .etc-raster-ti { opacity: 1; }
+
+/* Sammlung rechts */
+.etc .etc-tafel-bereich { min-height: 0; display: flex; flex-direction: column; }
+.etc .etc-tafel-kopf { justify-content: space-between; }
+.etc .etc-tafel-titel { font-size: 14px; }
+.etc .etc-uhr { font-variant-numeric: tabular-nums; margin-left: 2px; }
+.etc .etc-tafel-knoepfe { display: flex; align-items: center; gap: 18px; }
+.etc .etc-leeren { font: inherit; font-size: 14px; color: var(--grau); background: none; border: 0; padding: 0; cursor: pointer; }
+.etc .etc-leeren:hover { color: var(--ink); }
+.etc .etc-tafel { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 0 80px; display: grid; grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row dense; align-content: start; }
+.etc .etc-karte { grid-column: 1 / -1; border-bottom: 1px solid var(--linie); }
+.etc .etc-karte-bild { grid-column: 1 / -1; }
+.etc .etc-karte-kopf { display: grid; grid-template-columns: var(--pos) minmax(0, 1fr) auto auto; gap: 0 16px; padding: 7px var(--rand); align-items: baseline; }
+.etc .etc-karte-bild .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
+.etc .etc-karte-bild .etc-karte-kopf .etc-typ { display: none; }
+.etc .etc-karte-zu { display: inline-flex; align-items: center; justify-content: center; font: inherit; line-height: 1; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; }
+.etc .etc-karte-zu svg { display: block; }
+.etc .etc-karte-zu:hover { color: var(--grau); }
+.etc .etc-karte .etc-auf { padding: 2px var(--rand) 26px calc(var(--rand) + var(--pos) + 16px); }
+.etc .etc-karte-bild .etc-auf { padding: 0 var(--rand) var(--rand); }
+.etc .etc-neu-da { animation: etc-da .6s ease-out; }
+@keyframes etc-da { from { background: rgba(0,0,0,.06); } to { background: transparent; } }
+
+/* Startbildschirm rechts: derselbe Text wie unter „über“ */
+.etc .etc-tafel-leer { grid-column: 1 / -1; padding: 20px var(--rand) 40px calc(var(--rand) + var(--pos) + 16px); max-width: calc(48ch + 120px); }
+
+/* Sammlungssymbol und Zurück: abgelöst durch Wischen und die zwei Punkte (mobil), am Rechner nicht nötig */
+.etc .etc-sammel-knopf, .etc .etc-zurueck { display: none; }
+/* zwei Punkte unten in der Mitte: Fundus · Sammlung (nur mobil), daneben die Zahl der Karten in der Sammlung */
+.etc .etc-seiten { display: none; }
+.etc .etc-sammel-knopf { flex: 0 0 auto; align-items: center; gap: 6px; height: 28px; padding: 0 10px; font: inherit; font-size: 14px; color: var(--ink);
+  background: var(--feld); border: 1px solid var(--feldrand); border-radius: 6px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.etc .etc-sammel-knopf svg { display: block; }
+.etc .etc-zurueck { flex: 0 0 auto; align-items: center; height: 28px; padding: 0 10px; color: var(--ink); background: var(--feld); border: 1px solid var(--feldrand);
+  border-radius: 6px; cursor: pointer; }
+.etc .etc-zurueck svg { display: block; }
+.etc .etc-gen-symbol { display: none; }
+.etc .etc-gen.etc-laeuft { opacity: .45; }
+@keyframes etc-puls { 0% { background: var(--ink); color: var(--grund); } 100% { background: var(--feld); color: var(--ink); } }
+@keyframes etc-puls-mobil { 0% { opacity: .25; } 100% { opacity: 1; } }
+.etc .etc-sammel-knopf.etc-puls { animation: etc-puls .7s ease-out; }
+
+/* Mobil: nur der Fundus (index, graph, tafel); die Sammlung ist eine eigene Ansicht */
+@media (max-width: 800px) {
+  .etc { --rand: 18px; }
+  /* Aufbau: zwei Seiten, Fundus und Sammlung; gewechselt wird durch Wischen oder über die Punkte unten */
+  .etc .etc-buehne { display: block; height: 100vh; height: 100dvh; }
+  .etc .etc-links { height: 100%; border-right: 0; }
+  .etc .etc-tafel-bereich { display: none; height: 100%; }
+  .etc.etc-zeige-sammlung .etc-links { display: none; }
+  .etc.etc-zeige-sammlung .etc-tafel-bereich { display: flex; }
+  /* Leisten oben: 60 px, Schrift 14 px, Symbole ohne Rahmen */
+  .etc .etc-kopf { min-height: 60px; }
+  .etc .etc-wahl-knopf { line-height: 24px; }
+  .etc .etc-sammel-knopf, .etc .etc-sammel-knopf:not([hidden]), .etc .etc-zurueck { display: none; }
+  .etc .etc-seiten { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 20;
+    display: flex; align-items: center; gap: 5px; height: 34px; padding: 0 10px; border-radius: 17px;
+    background: var(--grund); border: 1px solid var(--feldrand); font-variant-numeric: tabular-nums; }
+  .etc .etc-punkt { display: block; width: 24px; height: 30px; padding: 0; border: 0; background: none; cursor: pointer; position: relative; }
+  .etc .etc-punkt::after { content: ""; position: absolute; left: 7px; top: 10px; width: 10px; height: 10px; box-sizing: border-box;
+    border: 1px solid var(--ink); border-radius: 50%; transition: background-color .2s; }
+  .etc .etc-punkt.etc-an::after { background: var(--ink); }
+  .etc .etc-seiten-zahl { min-width: 0; padding-right: 3px; font-size: 14px; color: var(--ink); }
+  .etc .etc-seiten-zahl:empty { display: none; }
+  .etc .etc-seiten.etc-puls { animation: etc-puls-mobil .7s ease-out; }
+  .etc .etc-graph-info { bottom: calc(58px + env(safe-area-inset-bottom)); }
+  /* Seitenwechsel: die neue Seite gleitet von der Seite herein, aus der sie kommt */
+  @keyframes etc-rein-r { from { transform: translateX(35%); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes etc-rein-l { from { transform: translateX(-35%); opacity: 0; } to { transform: none; opacity: 1; } }
+  .etc.etc-rein-r .etc-tafel-bereich { animation: etc-rein-r .28s ease-out; }
+  .etc.etc-rein-l .etc-links { animation: etc-rein-l .28s ease-out; }
+  /* Suche: Feld so breit wie das Auswahlfeld, daneben ein × mit Rahmen statt „Fertig“ */
+  .etc .etc-suche-box { height: 32px; }
+  .etc .etc-suche-fertig { display: flex; align-items: center; justify-content: center; width: 52px; height: 32px; padding: 0; border-radius: 6px; }
+  .etc .etc-suche-fertig[hidden] { display: none; }
+  .etc .etc-fertig-text { display: none; }
+  .etc .etc-fertig-x { display: flex; }
+  .etc .etc-fertig-x svg { width: 15px; height: 15px; }
+  /* Sammlungsleiste: Sammlung Datum Uhrzeit · Download und × rechts */
+  .etc .etc-tafel-kopf { display: flex; gap: 16px; }
+  .etc .etc-tafel-titel { flex: 1 1 auto; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .etc .etc-tafel-kopf .etc-tafel-knoepfe { flex: 0 0 auto; justify-content: flex-end; align-items: center; gap: 22px; }
+  .etc .etc-gen { display: flex; align-items: center; justify-content: flex-end; height: 30px; padding: 0; color: var(--ink); }
+  .etc .etc-gen-text { display: none; }
+  .etc .etc-gen-symbol { display: flex; }
+  .etc .etc-gen-symbol svg { width: 18px; height: 18px; }
+  .etc .etc-tafel-knoepfe .etc-karte-zu { height: 30px; }
+  .etc .etc-tafel-knoepfe .etc-karte-zu svg, .etc .etc-karte-kopf .etc-karte-zu svg { width: 18px; height: 18px; }
+  /* Listen und Karten */
+  .etc .etc-ihalt .etc-thema:first-child h2 { padding-top: 24px; }
+  .etc summary { grid-template-columns: var(--spalte) minmax(0, 1fr); }
+  .etc .etc-typ { display: none; }
+  .etc .etc-tafel { grid-template-columns: 1fr; }
+  .etc .etc-tafel > :first-child { margin-top: 8px; }
+  .etc .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
+  .etc .etc-karte .etc-auf { padding-left: var(--rand); }
+  .etc .etc-karte-bild { border-right: 0; }
+  .etc .etc-karte .etc-bilder.etc-mehrere figure { max-width: 100%; }
+  .etc .etc-bild-zu { opacity: 1; }
+  .etc .etc-tafel-leer, .etc .etc-ueber { padding: 20px var(--rand); }
+}
+
+/* Grau etwas leichter */
+.etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
+.etc .etc-leeren { font-weight: 250; }
+.etc .etc-text strong, .etc .etc-text th { font-weight: 500; }
+.etc, .etc * { font-variation-settings: "FLAR" 100; }
+
+/* Darstellung auf der Über-Seite */
+.etc .etc-darstellung { margin-top: 2em; }
+.etc .etc-darstellung p { margin: 0 0 0.3em; }
+.etc .etc-darstellung button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin-right: 12px; cursor: pointer; }
+.etc .etc-darstellung button:hover { color: var(--grau); }
+.etc .etc-darstellung button.etc-aktiv { text-decoration: underline; text-underline-offset: 3px; }
+
+/* alle Symbole mit derselben feinen Linie, egal wie groß sie gezeichnet sind */
+.etc .etc-kopf svg *, .etc .etc-karte-zu svg *, .etc .etc-bild-zu svg *, .etc .etc-text-zu svg * { vector-effect: non-scaling-stroke; stroke-width: 1.5px; }
+
+/* × am Text einer Karte: wie bei den Bildern, erscheint beim Überfahren, mobil immer */
+.etc .etc-textblock { position: relative; padding-right: 30px; }
+.etc .etc-text-zu { position: absolute; top: 2px; right: 0; display: flex; padding: 3px; color: var(--ink); background: none; border: 0; cursor: pointer;
+  opacity: 0; transition: opacity .15s; }
+.etc .etc-textblock:hover .etc-text-zu { opacity: 1; }
+@media (hover: none), (max-width: 800px) { .etc .etc-text-zu { opacity: 1; } }
+
+/* Kachel Fundus ⇄ Projekte: Kreis bzw. Kreis mit Strahlen, quadratisch im Kasten wie das Auswahlfeld daneben, gleiche Höhe, gleicher Rahmen */
+.etc .etc-welt-knopf { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 28px; height: 28px; padding: 0;
+  color: var(--ink); background: var(--grund); border: 1px solid var(--feldrand); border-radius: 6px; cursor: pointer; overflow: hidden;
+  transition: width .2s, margin .2s, opacity .2s, border-color .2s; }
+.etc .etc-welt-knopf[hidden] { display: none; }
+.etc .etc-welt-knopf svg { display: block; width: 100%; height: 100%; flex: 0 0 auto; }
+.etc .etc-kopf .etc-welt-knopf svg * { vector-effect: none; stroke-width: 7px; }
+@media (max-width: 800px) { .etc .etc-welt-knopf { width: 32px; height: 32px; } }
+/* am Rechner wie bei haegeman-temmerman: die Kachel erscheint erst, wenn die Maus links auf dem Fundus ist;
+   bei den Projekten bleibt das Zeichen stehen, damit man sieht, dass man woanders ist */
+@media (hover: hover) and (min-width: 801px) {
+  .etc[data-welt="etc"] .etc-links:not(:hover):not(:focus-within) .etc-welt-knopf { width: 0; margin-left: -16px; opacity: 0; border-color: transparent; }
+}
+
+/* Wechsel der Welt: die linke Seite blendet neu ein */
+@keyframes etc-welt { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.etc .etc-weltwechsel .etc-ihalt { animation: etc-welt .4s ease-out; }  /* der Graph bleibt stehen, nur seine Betonung gleitet */
+
+/* Nacht: schwarzer Grund, weiße Schrift (Klasse „nacht“ am html, gesetzt im Kopf) */
+.nacht .etc { --grund: #000; --ink: #fff; --linie: rgba(255,255,255,.5); --haar: rgba(255,255,255,.2);
+  --feld: #262626; --feldrand: #444; --pfeil: #ddd; }
+.nacht .etc .etc-auf-tafel > details > summary .etc-typ, .nacht .etc .etc-auf-tafel > details > summary .etc-nr { color: rgba(0,0,0,.55); }
+.nacht .etc .etc-wahl-knopf { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1 4.5 4 1.5 7 4.5M1 7.5 4 10.5 7 7.5' fill='none' stroke='%23ddd' stroke-width='1.3'/%3E%3C/svg%3E"); }
+.nacht .etc .etc-wahl-liste { background: #2a2a2a; color: #fff; box-shadow: 0 0 0 .5px rgba(255,255,255,.2), 0 10px 30px rgba(0,0,0,.6); }
+.nacht .etc .etc-wahl-trenner { background: rgba(255,255,255,.18); }
+.nacht .etc .etc-suche-box, .nacht .etc .etc-suche-fertig { background: #1c1c1c; border-color: #444; box-shadow: none; }
+.nacht .etc .etc-suche-kopf, .nacht .etc .etc-suche-fertig { color: #fff; }
+.nacht .etc .etc-suche-fertig:active { background: #333; }
+.nacht .etc .etc-suche-loesch { background: #666; color: #000; }
+@keyframes etc-da-nacht { from { background: rgba(255,255,255,.08); } to { background: transparent; } }
+.nacht .etc .etc-neu-da { animation-name: etc-da-nacht; }
+
+.etc.etc-einzel { display: block; max-width: 760px; margin: 0 auto; padding: 18px var(--rand, 16px) 60px; height: auto; overflow: visible; }
+.etc-einzel-kopf { display: flex; gap: 16px; align-items: baseline; padding: 6px 0 28px; }
+.etc-einzel-kopf a { color: inherit; text-decoration: none; font-weight: 500; }
+.etc-einzel h1 { font-size: 22px; font-weight: 400; margin: 0 0 18px; }
+.etc-einzel .etc-bilder img { max-width: 100%; height: auto; }
+.etc-einzel-fuss { margin-top: 36px; }
+.etc-einzel .etc-text { margin-top: 22px; }
+.etc-einzel .etc-bilder { margin-top: 22px; display: grid; gap: 12px; }
+</style></head>
+<body><div class="etc etc-einzel"><header class="etc-einzel-kopf"><a href="../#collective-learning">et</a><span class="etc-grau">x-v-009 · texte</span></header><main><h1>Collective Learning</h1><dl class="etc-dl"><dt>autor</dt><dd>Theresa Zschäbitz</dd><dt>datum</dt><dd>2024-12-19</dd></dl><div class="etc-text"><p>This text is based on Theresa Zschäbitz’s presentation at Science Day 2024, “ALLIANCES,” organized by the Junior Professorship Act of Building at RWTH Aachen University. During the event, Zschäbitz joined Axel Sowa (moderator), James Binning (ASSEMBLE), and Angelika Hinterbrandner (kontextur) to discuss the topic “Collective Learning”:</p>
+<p>In recent years, there has been a notable rise in practices structured as collectives and collaborations, especially in creative fields. These innovative frameworks have achieved remarkable success, reshaping architecture and its methodologies. However, one area where this shift has been slower is in educational institutions, particularly universities. Universities, bound by bureaucratic processes and long-standing traditions, often resist changing their inner structures and processes. How to adopt and integrate new, collaborative approaches into their educational systems? This Science Day discussion aimed to explore the transformative potential of collaborative structures and their role in shaping the future of education which is now visibly happening parallel across recognized Universities Europe-wide. The interexchange of Universities with each other can foster solving architectures urgent need for change of practice by collaboration in research and teaching alike and interlinked.</p>
+<p>The HORST Anthill Pavilion in Asiat Park, Vilvoorde, Belgium, which Zschäbitz presented as a case study was created for the Horst Arts and Music festival. Designed to house Artist Afrah Shafiq’s video game installation ‘Where the Ants Go’ and the pavilion results from a collaboration between Afrah Shafiq, the RWTH Aachen University’s Junior Professorship “act of building” (aob), BC Materials, and architect Jeremy Waterfield. The pavilion which was considered as a test design for BC Materials compressed earth blocks, also offered the opportunity to try reed as a façade material. Built by 45 RWTH students over two weeks, it showcases innovative, sustainable building practices in combination. The pavilion embodies a forward-thinking approach to architecture, merging vernacular techniques with new and rediscovered materials to create an expressive design that reflects future possibilities for sustainable construction while teaching students and professionals the material specific craft techniques during its construction.</p>
+<p>Aobs Pavilion construction project at HORST Festival was a broad collaboration with different institutions and people, the course content of our summer terms Master researchfield and elective and taught by my colleague Bregt Hoppenbrouwers o BC materials and me. When setting up the Horst workshop idea with the team of Horst we thought about how to integrate the students in the realization of this project and chose to rather focus on the construction execution planning, as the time wasn’t given to work out a design in collaboration with the artist whose digital artwork this project hosts. The design was done by Jeremy Waterfield, who worked out the projects design and with whom we brainstormed about the construction technique together. We then took over the role of a general contractor with aob to execute the design, subdivided the project in work packages: the masonry, the prefabricated thatch elements, the wooden roof which our students of the researchfield course had to research: vernacular examples, the construction technique, tasks and tools. The students planned the structure from element to assembly, some meetings with professionals helped a lot to enable the students to guide 8 teams of elective students through two weeks of construction.</p>
+<p>To change the way future architects construct we need to expand material and building construction knowledge that goes beyond catalogued readymade products.</p>
+<p>… on material level ….on processing and construction level … on craftsmanship … on design and planning level</p>
+<p>We need to get to know those new materials, that often don’t come in standard formats: material characteristics means feeling its weight, how many people or tools you need to carry it from A to B, the surface haptic, how it behaves when it touches the water and if it crumbles in your hands. As well as on a its durability, to see how it changes with weather, the method of assembling, what happens to the earth mortar when it gets mixed too dry or to wet and how does this affect my constructions result?  These things cannot be understood simply by reading and hearing theoretically in technical datasheets, one needs to get involved with it – we need to build and prototype with our own hands.</p>
+<p>We have to learn about materials on their processing and production context: Where does it come from? How did it grow, get excavated or formed, what was this element before it was an element and how did it get here to the construction site? To be able to intervene with existing material flows, waste streams, we need to know how they work. Our master studio students are asked to make their own geo-based material from waste streams they find in Quarrys, from excavation waste and in urban recycling centers or biobased so called “waste” of Agricultural processes. To be able to create an earth mixture for compressed earth blocks from this excarvation waste is not only a very poetic storytelling but fascinating that it actually works and could work for other building materials too. It enables the students to understand their works broader impact and that they have an influence on the process of what is the matter they design with and don’t have to stay limited by existing catalogues of established elements. We need to learn about our industrial and natural environment and build up the awareness of having an alternative choice to what’s on the market. We have to learn about the impact of our choice of actions.</p>
+<p>When switching to less processed, local and natural construction materials we need to learn from professionals and craftmen how to handle the material. At Horst we learned to mason from Professionals who taught us how to mason without speaking a common language, lots of unwritten knowledge sits in their gestures, the preparation of the masonry guidelines and the installation of the construction site. From a professional thatcher we learned how to arrange the Reet according to its length, designing the facade pattern on-site depending on the size of what resource we received here. He taught us to how to attach the Reet to the wooden substructure, how to handle the tools, and what small details to take care of, which led to many in situ detail solutions that would simply would not have been possible to plan without his input. What was the most amazing to see was how quickly our students picked it up and introduced the techniques to each other. Craftsmen knowledge that’s necessary to find smart solutions you simply can’t learn in school when not trying out welding, sawing, ramming, masoning, flexing, screwing, transporting, setting up scaffolding, mixing mortar – assembling –  yourself at least once to get a basic understanding of crafts and tools.</p>
+<p>On construction planning level: If we start to think building like borrowing material from a natural cycle, we will automatically construct for disassembly, we have to think what happens to the elements and material in its afterlife, which leads us to screwing, stacking &amp; stapling instead of glueing, welding, energy-intensive transformation and assembly. To create an awareness about the constructive role the element plays, we can choose wisely which material can do what best: in the Horst projects the compressed earth blocks carry the vertical load while Reet protects it from the rain, like this, we can use earth blocks as the loadbearing structure with only a base layer of stabilised blocks. Reused polycarbonate lets light in from the top and at the same time is a reliant layer of water protection in the horizontal direction. The constructive roles of each material are clearly readable, thus also buildable and possible to maintain. Highly processed and performative elements are only used to the minimum necessary and reused and assembled in a demountable way. We don’t need to find the one new material that does it all but smartly combine the capacities of what we have here in hybrid systems and always wonder: how would I actually build this detail?</p>
+<p>This constructive pragmatism can be learned on site, where you simply would not do something unnecessary when there is a more obvious solution. And who learned here from whom? As teachers we have the chance to create safe spaces for challenges, Innovation and Prototyping, take away the boundaries that don’t allow experimentation in future jobs, and allow Failure. We can encourage Unlearning of thinking patterns; we can also listen and engage in conversation to learn from each other’s ideas. We can create a practical context, give a framework, set up scenarios that enable self-learning, trust the student’s abilities, guide and organise responsibility, enable them to formulate their own answers, use their skills, try out new things in a secure context and help each other, to become allies rather than part of a hierarchical system.</p>
+<p>So to provoke with a statement on “How will we construct the future?” Practical construction should be integrated in the basic education - “Grundlehre” - of architects. We need to expand the ability to draw and plan construction by basic knowledge of how to construct as a team.</p></div><div class="etc-bilder"><figure><img src="../img/fundus-collective-learning-werkstatt.jpg" width="1600" height="1067" alt="Collective Learning – Werkstatt" loading="lazy"></figure><figure><img src="../img/fundus-collective-learning-reet.jpg" width="1067" height="1600" alt="Collective Learning – Reet" loading="lazy"></figure><figure><img src="../img/fundus-collective-learning-pavillon-auen-foto-eline-willaert.jpg" width="1067" height="1600" alt="Collective Learning – Pavillon außen, Foto Eline Willaert" loading="lazy"></figure><figure><img src="../img/fundus-collective-learning-ausstellung-innen-foto-eline-willaert.jpg" width="1067" height="1600" alt="Collective Learning – Ausstellung innen, Foto Eline Willaert" loading="lazy"></figure><figure><img src="../img/fundus-collective-learning-blick-nach-oben-foto-eline-willaert.jpg" width="1067" height="1600" alt="Collective Learning – Blick nach oben, Foto Eline Willaert" loading="lazy"></figure></div><p class="etc-einzel-fuss"><a href="../#collective-learning">im Fundus öffnen</a></p></main></div></body></html>
