@@ -1231,7 +1231,10 @@ html.nacht body { background: #000; }
       ? 'Tippen legt in die Sammlung · mit zwei Fingern zoomen, doppelt tippen setzt zurück'
       : 'Klick legt in die Sammlung · ziehen, scrollen, Doppelklick setzt zurück');
     info.textContent = stand; box.appendChild(cv); box.appendChild(info);
-    var land = new Path2D(KD.land), grenzen = new Path2D(KD.grenzen || ''), ST = KD.staedte || [];
+    var land = new Path2D(KD.land), grenzen = new Path2D(KD.grenzen || ''), ST = (KD.staedte || []).slice();
+    /* Städte, in deren Nähe (~40 km) Werke liegen, haben Vorrang und erscheinen schon in der Übersicht */
+    ST.forEach(function (s) { s.nah = KD.punkte.some(function (p) { var dx = p[3] - s[1], dy = p[4] - s[2]; return dx * dx + dy * dy < 400; }); });
+    ST.sort(function (a, b) { return (b.nah ? 1 : 0) - (a.nah ? 1 : 0) || a[3] - b[3]; });
     var TT = (GD_NETZ && GD_NETZ.titel) || {};
     var P = KD.punkte.map(function (p) { return { id: p[0], t: p[1], k: p[2], th: TT[p[2]] || p[2], x: p[3], y: p[4] }; });
     var ctx = cv.getContext('2d'), W = 300, H = 300, dpr = window.devicePixelRatio || 1;
@@ -1259,12 +1262,12 @@ html.nacht body { background: #000; }
       /* Städte: hellgrau, je weiter hineingezoomt, desto mehr (Natural Earth min_zoom); keine Überschneidungen */
       var wz = Math.log(7200 * z / 256) / Math.LN2, belegt = [];
       P.forEach(function (p) {  /* unsere Punkte und ihre Beschriftung haben Vorrang vor den Städtenamen */
-        var x = p.x * z + ox, y = p.y * z + oy; belegt.push([x - 7, y - 7, x + 7, y + 7]);
+        var x = p.x * z + ox, y = p.y * z + oy;
         if (p.k === 'projekt' || z / zFit >= 2.2) { var w = Math.min(p.t.length, 34) * 3.4; belegt.push([x - w, y + 6, x + w, y + 22]); }
       });
       ctx.font = '300 10.5px "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
       for (var si = 0; si < ST.length; si++) {
-        var s = ST[si]; if (s[3] > wz + 0.4) continue;
+        var s = ST[si]; if (s[3] > wz + (s.nah ? 2.5 : 0.4)) continue;
         var cx = s[1] * z + ox, cy = s[2] * z + oy; if (cx < -10 || cy < -10 || cx > W + 10 || cy > H + 10) continue;
         var bw = ctx.measureText(s[0]).width, bx = [cx - 3, cy - 7, cx + 6 + bw, cy + 7], frei = true;
         for (var bi = 0; bi < belegt.length && frei; bi++) { var o = belegt[bi]; if (bx[0] < o[2] && bx[2] > o[0] && bx[1] < o[3] && bx[3] > o[1]) frei = false; }
