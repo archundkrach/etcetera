@@ -123,7 +123,7 @@ html.nacht body { background: #000; }
 
 /* Graph */
 .etc .etc-graph-bereich { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
-.etc .etc-karte-filter { position: absolute; top: 10px; left: var(--rand); right: var(--rand); display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; }
+.etc .etc-karte-filter { position: absolute; top: 0; left: 0; right: 0; padding: 10px var(--rand) 14px; display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; background: linear-gradient(var(--grund) 75%, transparent); }
 .etc .etc-karte-filter button { pointer-events: auto; font: inherit; font-size: 13px; color: var(--grau); background: none; border: 0; padding: 2px 0; cursor: pointer; }
 .etc .etc-karte-filter button.etc-aktiv { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .etc .etc-karte-zeit { flex-basis: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; margin-top: 4px; }
@@ -258,7 +258,7 @@ html.nacht body { background: #000; }
 }
 
 /* Grau etwas leichter */
-.etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
+.etc .etc-entwurf, .etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
 .etc .etc-leeren { font-weight: 250; }
 .etc .etc-text strong, .etc .etc-text th { font-weight: 500; }
 .etc, .etc * { font-variation-settings: "FLAR" 100; }
@@ -321,7 +321,7 @@ html.nacht body { background: #000; }
 .etc-einzel .etc-text { margin-top: 22px; }
 .etc-einzel .etc-bilder { margin-top: 22px; display: grid; gap: 12px; }
 </style></head>
-<body><div class="etc etc-einzel"><header class="etc-einzel-kopf"><a href="../#gaussian-splatting">et</a><span class="etc-grau">t-d-004 · werkzeuge</span></header><main><h1>Gaussian Splatting</h1><dl class="etc-dl"><dt>wofür</dt><dd>Räume und Objekte fotorealistisch und begehbar festhalten</dd><dt>tags</dt><dd>thema/bestand</dd></dl><div class="etc-text"><p>Ein Verfahren aus der Computergrafik, 2023 von Forschenden am Inria vorgestellt („3D Gaussian Splatting for Real-Time Radiance Field Rendering“). Statt eines Netzes aus Dreiecken besteht die Szene aus Millionen kleiner, unscharfer Farbwolken im Raum, die aus Fotos oder einem Video berechnet werden. Das Ergebnis sieht fast aus wie ein Foto, in dem man sich frei bewegen kann, auch Spiegelungen, Pflanzen und feine Strukturen gelingen gut. Es ist aber kein Modell im Sinn der Planung: Flächen und Kanten lassen sich nicht sauber messen oder bearbeiten.</p>
+<body><div class="etc etc-einzel"><header class="etc-einzel-kopf"><a href="../#gaussian-splatting">et</a><span class="etc-grau">t-d-004 · werkzeuge</span></header><main><h1>Gaussian Splatting</h1><dl class="etc-dl"><dt>wofür</dt><dd>Räume und Objekte fotorealistisch und begehbar festhalten</dd><dt>text</dt><dd><span class="etc-entwurf">Entwurf mit KI (Claude), noch nicht gegengelesen</span></dd><dt>tags</dt><dd>thema/bestand</dd></dl><div class="etc-text"><p>Ein Verfahren aus der Computergrafik, 2023 von Forschenden am Inria vorgestellt („3D Gaussian Splatting for Real-Time Radiance Field Rendering“). Statt eines Netzes aus Dreiecken besteht die Szene aus Millionen kleiner, unscharfer Farbwolken im Raum, die aus Fotos oder einem Video berechnet werden. Das Ergebnis sieht fast aus wie ein Foto, in dem man sich frei bewegen kann, auch Spiegelungen, Pflanzen und feine Strukturen gelingen gut. Es ist aber kein Modell im Sinn der Planung: Flächen und Kanten lassen sich nicht sauber messen oder bearbeiten.</p>
 <h3>Wie wir es nutzen</h3>
 <ul><li>Zum Festhalten eines Zustands, wie er ist: ein Raum vor dem Umbau, eine Baustelle, ein Fundstück vor Ort, ein Ort für die Tafel oder die Website.</li><li>Nicht als Ersatz für das Aufmaß, dafür bleibt <a href="../fotogrammetrie/">Fotogrammetrie</a> oder ein Laserscan mit gemessenen Kontrollmaßen.</li><li>Werkzeuge: <a href="../polycam/">Polycam</a> (Splats nur im bezahlten Tarif, Export als „Splat PLY“), Postshot (Windows, rechnet aus COLMAP-Daten), SuperSplat im Browser (frei, zum Zuschneiden und Teilen).</li></ul>
 <h3>Quellen</h3>

@@ -123,7 +123,7 @@ html.nacht body { background: #000; }
 
 /* Graph */
 .etc .etc-graph-bereich { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
-.etc .etc-karte-filter { position: absolute; top: 10px; left: var(--rand); right: var(--rand); display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; }
+.etc .etc-karte-filter { position: absolute; top: 0; left: 0; right: 0; padding: 10px var(--rand) 14px; display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; background: linear-gradient(var(--grund) 75%, transparent); }
 .etc .etc-karte-filter button { pointer-events: auto; font: inherit; font-size: 13px; color: var(--grau); background: none; border: 0; padding: 2px 0; cursor: pointer; }
 .etc .etc-karte-filter button.etc-aktiv { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
 .etc .etc-karte-zeit { flex-basis: 100%; display: flex; align-items: center; gap: 12px; pointer-events: auto; margin-top: 4px; }
@@ -258,7 +258,7 @@ html.nacht body { background: #000; }
 }
 
 /* Grau etwas leichter */
-.etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
+.etc .etc-entwurf, .etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
 .etc .etc-leeren { font-weight: 250; }
 .etc .etc-text strong, .etc .etc-text th { font-weight: 500; }
 .etc, .etc * { font-variation-settings: "FLAR" 100; }
@@ -321,7 +321,7 @@ html.nacht body { background: #000; }
 .etc-einzel .etc-text { margin-top: 22px; }
 .etc-einzel .etc-bilder { margin-top: 22px; display: grid; gap: 12px; }
 </style></head>
-<body><div class="etc etc-einzel"><header class="etc-einzel-kopf"><a href="../#din-276">et</a><span class="etc-grau">w-n-019 · wissen</span></header><main><h1>DIN 276</h1><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>ungeprüft</dd></dl><div class="etc-text"><p>Die Norm „Kosten im Bauwesen“ ordnet alle Kosten eines Bauprojekts in Kostengruppen: 100 Grundstück, 200 Vorbereitende Maßnahmen, 300 Bauwerk – Baukonstruktionen, 400 Bauwerk – Technische Anlagen, 500 Außenanlagen, 600 Ausstattung und Kunstwerke, 700 Baunebenkosten, 800 Finanzierung. Sie legt außerdem fest, wie genau die Kosten in welcher Phase zu ermitteln sind, vom Kostenrahmen über Schätzung, Berechnung und Anschlag bis zur Feststellung. Aktuell ist die Ausgabe vom Dezember 2018. Die Norm ist kostenpflichtig, gute Erläuterungen gibt es frei bei Fachportalen.</p>
+<body><div class="etc etc-einzel"><header class="etc-einzel-kopf"><a href="../#din-276">et</a><span class="etc-grau">w-n-019 · wissen</span></header><main><h1>DIN 276</h1><dl class="etc-dl"><dt>art</dt><dd>norm</dd><dt>status</dt><dd>ungeprüft</dd><dt>text</dt><dd><span class="etc-entwurf">Entwurf mit KI (Claude), noch nicht gegengelesen</span></dd></dl><div class="etc-text"><p>Die Norm „Kosten im Bauwesen“ ordnet alle Kosten eines Bauprojekts in Kostengruppen: 100 Grundstück, 200 Vorbereitende Maßnahmen, 300 Bauwerk – Baukonstruktionen, 400 Bauwerk – Technische Anlagen, 500 Außenanlagen, 600 Ausstattung und Kunstwerke, 700 Baunebenkosten, 800 Finanzierung. Sie legt außerdem fest, wie genau die Kosten in welcher Phase zu ermitteln sind, vom Kostenrahmen über Schätzung, Berechnung und Anschlag bis zur Feststellung. Aktuell ist die Ausgabe vom Dezember 2018. Die Norm ist kostenpflichtig, gute Erläuterungen gibt es frei bei Fachportalen.</p>
 <h3>Für die Praxis</h3>
 <ul><li>Eine Kostenschätzung nach DIN 276 bis zur 2. Ebene (z. B. KG 330 Außenwände, KG 420 Wärmeversorgung) ist die übliche Gliederung, auch für die Kostenschätzung im Projekt (Numbers-Datei in <code>material/00_DOKUMENTE</code>).</li><li>Umsatzsteuer: Kosten immer mit oder ohne Umsatzsteuer kennzeichnen, die Norm verlangt das.</li><li>Flächen und Rauminhalte als Bezugsgrößen kommen aus <a href="../din-277/">DIN 277</a>.</li><li>Die anrechenbaren Kosten für das Honorar nach <a href="../hoai/">HOAI</a> werden nach dieser Norm ermittelt.</li></ul>
 <h3>Quellen</h3>
