@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>21st Century Museum of Contemporary Art · etcetera</title><meta name="description" content="Ein Museum für Gegenwartskunst in Kanazawa, von SANAA ( Kazuyo Sejima und Ryue Nishizawa ) gebaut und 2004 eröffnet. Ein flacher, runder Glasbau mit über hun…"><link rel="canonical" href="https://archundkrach.github.io/etcetera/21st-century-museum-of-contemporary-art/"><meta property="og:title" content="21st Century Museum of Contemporary Art"><meta property="og:description" content="Ein Museum für Gegenwartskunst in Kanazawa, von SANAA ( Kazuyo Sejima und Ryue Nishizawa ) gebaut und 2004 eröffnet. Ein flacher, runder Glasbau mit über hun…"><meta property="og:type" content="article"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png" media="(prefers-color-scheme: light)"><link rel="icon" type="image/png" sizes="32x32" href="../favicon-32-dunkel.png" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/png" sizes="192x192" href="../favicon-192.png"><link rel="apple-touch-icon" href="../apple-touch-icon.png"><script>(function(){var m='auto';try{m=localStorage.getItem('etc-modus')||'auto'}catch(e){}var h=new Date().getHours();var n=m==='dunkel'||(m==='auto'&&(h<9||h>=18));document.documentElement.classList.toggle('nacht',n);})();</script><style>
+body { margin: 0; background: #fff; }
+html.nacht body { background: #000; }
+/* Schrift: Commissioner (SIL Open Font License), variabel mit Flare-Achse, selbst gehostet unter fonts/ */
+@font-face { font-family: "Commissioner Flare"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("../fonts/commissioner-latin-full-normal.woff2") format("woff2-variations"); }
+.etc { --grund: #fff; --ink: #000; --grau: #8a8a8a; --linie: rgba(0,0,0,.6); --haar: rgba(0,0,0,.14);
+  --feld: #ececec; --feldrand: #c8c8c8; --pfeil: #333; --spalte: 10ch; --pos: 3ch; --rand: 28px;
+  font: 300 14px/1.45 "Commissioner Flare", "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.005em; color: var(--ink); background: var(--grund);
+  -webkit-font-smoothing: antialiased; }
+.etc * { box-sizing: border-box; }
+.etc p, .etc h2, .etc ol, .etc figure, .etc dl, .etc dd { margin: 0; padding: 0; }
+.etc a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--haar); }
+.etc a:hover { border-bottom-color: var(--ink); }
+.etc .etc-grau { color: var(--grau); font-weight: 400; }
+.etc .etc-x { display: inline-block; background: var(--ink); white-space: pre; height: 1em; vertical-align: -0.12em; }
+.etc .etc-intro { display: none; }
+
+/* Listen: Zeilen mit Linie, Titel kursiv in Versalien */
+.etc .etc-thema h2 { font: inherit; color: var(--grau); padding: 20px var(--rand) 8px; }
+.etc ol { list-style: none; }
+.etc .etc-thema > ol > li { border-bottom: 1px solid var(--linie); }
+.etc summary { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr) auto; gap: 0 16px; padding: 7px var(--rand); cursor: pointer; list-style: none; }
+.etc summary::-webkit-details-marker { display: none; }
+.etc .etc-ti { min-width: 0; }
+.etc .etc-nr, .etc .etc-typ, .etc .etc-pos { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.etc .etc-typ { color: var(--grau); }
+.etc summary:hover .etc-ti { color: var(--grau); }
+.etc li.etc-such-wahl:not(.etc-auf-tafel) > details > summary { background: rgba(0,0,0,.07); }
+.nacht .etc li.etc-such-wahl:not(.etc-auf-tafel) > details > summary { background: rgba(255,255,255,.12); }
+.etc .etc-auf-tafel > details > summary { background: var(--ink); color: var(--grund); }
+.etc .etc-auf-tafel > details > summary .etc-typ, .etc .etc-auf-tafel > details > summary .etc-nr { color: rgba(255,255,255,.62); }
+.etc .etc-auf-tafel > details > summary:hover .etc-ti { color: inherit; }
+
+/* Inhalte aus den Notizen: eine Schrift, ruhige Abstände */
+.etc .etc-auf > * + * { margin-top: 14px; }
+.etc details > .etc-auf { padding: 4px var(--rand) 24px calc(var(--rand) + var(--spalte) + 16px); }
+.etc .etc-dl { display: grid; grid-template-columns: var(--spalte) minmax(0, 1fr); gap: 3px 16px; }
+.etc .etc-dl dt { color: var(--grau); }
+.etc .etc-bez { }
+.etc .etc-text { max-width: 62ch; font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+.etc .etc-text > :first-child { margin-top: 0; }
+.etc .etc-text p { margin: 0 0 0.75em; }
+.etc .etc-text h2, .etc .etc-text h3, .etc .etc-text h4 { font: inherit; font-weight: 500; margin: 1.4em 0 0.35em; padding: 0; }
+.etc .etc-text strong { font-weight: 600; }
+.etc .etc-text code { font: inherit; }
+.etc .etc-text ul { list-style: none; margin: 0 0 0.75em; padding: 0; }
+.etc .etc-text li { position: relative; padding-left: 1.1em; margin: 0 0 0.2em; }
+.etc .etc-text li::before { content: "–"; position: absolute; left: 0; color: var(--grau); }
+.etc .etc-text table { border-collapse: collapse; margin: 0.4em 0 1em; }
+.etc .etc-text th, .etc .etc-text td { text-align: left; vertical-align: top; padding: 4px 12px 4px 0; border-bottom: 1px solid var(--haar); }
+.etc .etc-text th { font-weight: 600; border-bottom-color: var(--linie); }
+.etc .etc-text .tw { overflow-x: auto; }
+.etc .etc-text .box { display: inline-block; width: 0.7em; height: 0.7em; border: 1px solid; margin-right: 6px; }
+.etc .etc-text .box.done { background: var(--ink); }
+.etc figure img { display: block; max-width: 100%; height: auto; }
+/* Bilder einer Notiz: untereinander, rechtsbündig, hohe Bilder kleiner */
+.etc .etc-bilder { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.etc .etc-bilder img, .etc .etc-karte-bild figure img { width: auto; max-height: 46vh; }
+.etc .etc-karte-bild figure { display: flex; justify-content: flex-end; }
+/* in der Sammlung rechts: linksbündig; mehrere Bilder einer Notiz nebeneinander, jedes einzeln mit × herausnehmbar */
+.etc .etc-karte .etc-bilder { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+.etc .etc-karte .etc-bilder figure { position: relative; max-width: 100%; }
+.etc .etc-karte .etc-bilder.etc-mehrere figure { max-width: calc(50% - 6px); }
+.etc .etc-karte .etc-bilder.etc-mehrere img { max-height: 30vh; }
+.etc .etc-bild-zu { position: absolute; top: 0; right: 0; display: flex; font: inherit; line-height: 1; padding: 5px; color: var(--ink);
+  background: var(--grund); border: 0; cursor: pointer; opacity: 0; transition: opacity .15s; }
+.etc .etc-karte .etc-bilder figure:hover .etc-bild-zu { opacity: 1; }
+@media (hover: none) { .etc .etc-bild-zu { opacity: 1; } }
+.etc .etc-karte.etc-karte-bild figure { justify-content: flex-start; }
+.etc .etc-ueber { padding: 20px var(--rand) 20px calc(var(--rand) + var(--spalte) + 16px); max-width: calc(48ch + 160px); }
+.etc .etc-ueber p, .etc .etc-tafel-leer p { font-size: 14px; line-height: 1.45; margin: 0 0 0.9em; }
+.etc .etc-ueber .etc-intro-hinweis, .etc .etc-tafel-leer .etc-intro-hinweis { color: var(--grau); margin-top: 1.6em; }
+/* Hinweise nur für das Handy (z. B. Wischen zwischen Fundus und Sammlung) */
+.etc .etc-nur-mobil { display: none; }
+@media (max-width: 800px) { .etc .etc-nur-mobil { display: block; } }
+
+/* Bühne (nur mit JavaScript; ohne steht alles untereinander): immer in der Mitte geteilt */
+.etc.etc-js .etc-quelle { display: none; }
+.etc .etc-buehne { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; }
+.etc .etc-links { min-height: 0; border-right: 1px solid var(--linie); background: var(--grund); color: var(--ink); transition: background-color .25s, color .25s; }
+.etc .etc-liste-bereich { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.etc .etc-kopf { position: relative; display: flex; align-items: center; gap: 16px; min-height: 46px; padding: 0 var(--rand); flex: 0 0 auto; border-bottom: 1px solid var(--linie); }
+.etc .etc-ihalt { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding-bottom: 80px; }
+.etc .etc-ihalt, .etc .etc-tafel { scrollbar-width: none; -ms-overflow-style: none; }
+.etc .etc-ihalt::-webkit-scrollbar, .etc .etc-tafel::-webkit-scrollbar { display: none; }
+.etc .etc-ihalt .etc-thema:first-child h2 { padding-top: 18px; }
+
+/* Menü: Auswahlfeld wie ein Systemfeld; die Liste klappt an seiner Oberkante nach unten auf */
+.etc .etc-wahl-knopf { flex: 1 1 auto; display: block; width: calc(100% + 11px); margin-left: -11px; font: inherit; line-height: 20px; text-align: left; cursor: default;
+  color: var(--ink); background: var(--feld) no-repeat right 9px center / 8px 12px; border: 1px solid var(--feldrand); border-radius: 6px; padding: 3px 28px 3px 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1 4.5 4 1.5 7 4.5M1 7.5 4 10.5 7 7.5' fill='none' stroke='%23333' stroke-width='1.3'/%3E%3C/svg%3E"); }
+.etc button, .etc input { -webkit-tap-highlight-color: transparent; }
+.etc button:focus, .etc button:focus-visible { outline: none; }
+.etc .etc-wahl-liste { position: absolute; top: 10px; left: calc(var(--rand) - 11px); right: var(--rand); z-index: 30; padding: 5px 5px 10px;
+  background: #f4f4f4; color: #000; border-radius: 7px; box-shadow: 0 0 0 .5px rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.18); font-size: 14px; line-height: 1.25; }
+.etc .etc-wahl-liste[hidden] { display: none; }
+.etc .etc-wahl-trenner { height: 1px; margin: 5px 9px; background: rgba(0,0,0,.14); }
+.etc .etc-suche-box { flex: 1 1 auto; display: flex; align-items: center; gap: 6px; min-width: 0; margin-left: -11px; height: 28px; padding: 0 8px 0 9px;
+  background: #fff; border: 1px solid #c6c6c6; border-radius: 7px; box-shadow: inset 0 1px 1px rgba(0,0,0,.04); }
+@media (min-width: 801px) { .etc .etc-suche-box:focus-within { border-color: #7aa7f0; box-shadow: 0 0 0 3px rgba(42,110,232,.38); } }
+.etc .etc-fertig-x { display: none; }
+.etc .etc-suche-box[hidden], .etc .etc-suche-fertig[hidden], .etc .etc-suche-loesch[hidden], .etc .etc-wahl-knopf[hidden] { display: none; }
+.etc .etc-lupe { flex: 0 0 auto; display: flex; color: #8a8a8a; }
+.etc .etc-suche-kopf { flex: 1 1 auto; min-width: 0; font: inherit; font-size: 14px; line-height: 20px; color: #000; background: none; border: 0; padding: 0; outline: none;
+  -webkit-appearance: none; appearance: none; }
+.etc .etc-suche-kopf::placeholder { color: #9a9a9a; }
+.etc .etc-suche-zahl { flex: 0 0 auto; color: #8a8a8a; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 250; }
+.etc .etc-suche-loesch { flex: 0 0 auto; width: 15px; height: 15px; display: flex; align-items: center; justify-content: center; padding: 0 0 1px; border: 0; border-radius: 50%;
+  background: #b4b4b4; color: #fff; font: inherit; font-size: 12px; line-height: 1; cursor: pointer; }
+.etc .etc-suche-loesch:hover { background: #8a8a8a; }
+.etc .etc-suche-fertig { flex: 0 0 auto; font: inherit; font-size: 14px; line-height: 20px; padding: 3px 12px; color: #000; background: #fff; border: 1px solid #c6c6c6;
+  border-radius: 6px; cursor: pointer; box-shadow: 0 .5px 1px rgba(0,0,0,.08); }
+.etc .etc-suche-fertig:active { background: #e8e8e8; }
+.etc .etc-impressum-angaben { margin-top: 2em; }
+.etc .etc-ueber .etc-impressum-angaben p { margin: 0 0 0.3em; }
+.etc .etc-nichts { padding: 18px var(--rand); color: var(--grau); font-style: italic; }
+.etc .etc-wahl-punkt { position: relative; display: block; width: 100%; font: inherit; color: inherit; background: none; border: 0; border-radius: 4px;
+  padding: 3px 10px 3px 10px; text-align: left; cursor: default; }
+.etc .etc-wahl-punkt.etc-aktiv { text-decoration: underline; text-underline-offset: 2px; }
+.etc .etc-wahl-punkt:hover { background: #2a6ee8; color: #fff; }
+
+/* Graph */
+.etc .etc-graph-bereich { flex: 1 1 auto; min-height: 0; position: relative; overflow: hidden; }
+.etc .etc-karte-filter { position: absolute; top: 10px; left: var(--rand); right: var(--rand); display: flex; flex-wrap: wrap; gap: 2px 12px; pointer-events: none; }
+.etc .etc-karte-filter button { pointer-events: auto; font: inherit; font-size: 13px; color: var(--grau); background: none; border: 0; padding: 2px 0; cursor: pointer; }
+.etc .etc-karte-filter button.etc-aktiv { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.etc .etc-graph { position: relative; }
+.etc .etc-graph canvas { display: block; touch-action: none; cursor: grab; }
+.etc .etc-graph-info { position: absolute; left: var(--rand); right: var(--rand); bottom: 14px; color: var(--grau); pointer-events: none; }
+
+/* Tafel links: alle Bilder untereinander über die ganze Breite, ohne Beschriftung; in der Sammlung mit Nummer */
+.etc .etc-raster { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; padding: 18px var(--rand) 0; }
+.etc .etc-raster-bild { position: relative; display: block; max-width: 100%; margin: 0; padding: 0; font: inherit; color: inherit; text-align: left;
+  background: none; border: 0; cursor: pointer; }
+.etc .etc-raster-bild img { display: block; width: auto; height: auto; max-width: 100%; max-height: 52vh; }
+/* mal kleiner: wechselnde Breiten, alles rechtsbündig */
+.etc .etc-raster-bild:nth-child(4n+2) { max-width: 72%; }
+.etc .etc-raster-bild:nth-child(4n+3) { max-width: 86%; }
+.etc .etc-raster-bild:nth-child(4n) { max-width: 58%; }
+.etc .etc-raster-bild:hover img { opacity: .82; }
+.etc .etc-raster-nr { position: absolute; top: 0; left: 0; padding: 1px 6px; background: var(--ink); color: var(--grund); font-variant-numeric: tabular-nums; }
+.etc .etc-raster-nr:empty { display: none; }
+.etc .etc-raster-bild.etc-auf-tafel img { outline: 1px solid var(--ink); outline-offset: -1px; }
+.etc .etc-raster-ti { display: block; width: 0; min-width: 100%; padding-top: 3px; color: var(--grau); font-weight: 250; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; }
+.etc .etc-raster-bild:hover .etc-raster-ti { opacity: 1; }
+
+/* Sammlung rechts */
+.etc .etc-tafel-bereich { min-height: 0; display: flex; flex-direction: column; }
+.etc .etc-tafel-kopf { justify-content: space-between; }
+.etc .etc-tafel-titel { font-size: 14px; }
+.etc .etc-uhr { font-variant-numeric: tabular-nums; margin-left: 2px; }
+.etc .etc-tafel-knoepfe { display: flex; align-items: center; gap: 18px; }
+.etc .etc-leeren { font: inherit; font-size: 14px; color: var(--grau); background: none; border: 0; padding: 0; cursor: pointer; }
+.etc .etc-leeren:hover { color: var(--ink); }
+.etc .etc-tafel { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0 0 80px; display: grid; grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row dense; align-content: start; }
+.etc .etc-karte { grid-column: 1 / -1; border-bottom: 1px solid var(--linie); }
+.etc .etc-karte-bild { grid-column: 1 / -1; }
+.etc .etc-karte-kopf { display: grid; grid-template-columns: var(--pos) minmax(0, 1fr) auto auto; gap: 0 16px; padding: 7px var(--rand); align-items: baseline; }
+.etc .etc-karte-bild .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
+.etc .etc-karte-bild .etc-karte-kopf .etc-typ { display: none; }
+.etc .etc-karte-zu { display: inline-flex; align-items: center; justify-content: center; font: inherit; line-height: 1; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; }
+.etc .etc-karte-zu svg { display: block; }
+.etc .etc-karte-zu:hover { color: var(--grau); }
+.etc .etc-karte .etc-auf { padding: 2px var(--rand) 26px calc(var(--rand) + var(--pos) + 16px); }
+.etc .etc-karte-bild .etc-auf { padding: 0 var(--rand) var(--rand); }
+.etc .etc-neu-da { animation: etc-da .6s ease-out; }
+@keyframes etc-da { from { background: rgba(0,0,0,.06); } to { background: transparent; } }
+
+/* Startbildschirm rechts: derselbe Text wie unter „über“ */
+.etc .etc-tafel-leer { grid-column: 1 / -1; padding: 20px var(--rand) 40px calc(var(--rand) + var(--pos) + 16px); max-width: calc(48ch + 120px); }
+
+/* Sammlungssymbol und Zurück: abgelöst durch Wischen und die zwei Punkte (mobil), am Rechner nicht nötig */
+.etc .etc-sammel-knopf, .etc .etc-zurueck { display: none; }
+/* zwei Punkte unten in der Mitte: Fundus · Sammlung (nur mobil), daneben die Zahl der Karten in der Sammlung */
+.etc .etc-seiten { display: none; }
+.etc .etc-sammel-knopf { flex: 0 0 auto; align-items: center; gap: 6px; height: 28px; padding: 0 10px; font: inherit; font-size: 14px; color: var(--ink);
+  background: var(--feld); border: 1px solid var(--feldrand); border-radius: 6px; cursor: pointer; font-variant-numeric: tabular-nums; }
+.etc .etc-sammel-knopf svg { display: block; }
+.etc .etc-zurueck { flex: 0 0 auto; align-items: center; height: 28px; padding: 0 10px; color: var(--ink); background: var(--feld); border: 1px solid var(--feldrand);
+  border-radius: 6px; cursor: pointer; }
+.etc .etc-zurueck svg { display: block; }
+.etc .etc-gen-symbol { display: none; }
+.etc .etc-gen.etc-laeuft { opacity: .45; }
+@keyframes etc-puls { 0% { background: var(--ink); color: var(--grund); } 100% { background: var(--feld); color: var(--ink); } }
+@keyframes etc-puls-mobil { 0% { opacity: .25; } 100% { opacity: 1; } }
+.etc .etc-sammel-knopf.etc-puls { animation: etc-puls .7s ease-out; }
+
+/* Mobil: nur der Fundus (index, graph, tafel); die Sammlung ist eine eigene Ansicht */
+@media (max-width: 800px) {
+  .etc { --rand: 18px; }
+  /* Aufbau: zwei Seiten, Fundus und Sammlung; gewechselt wird durch Wischen oder über die Punkte unten */
+  .etc .etc-buehne { display: block; height: 100vh; height: 100dvh; }
+  .etc .etc-links { height: 100%; border-right: 0; }
+  .etc .etc-tafel-bereich { display: none; height: 100%; }
+  .etc.etc-zeige-sammlung .etc-links { display: none; }
+  .etc.etc-zeige-sammlung .etc-tafel-bereich { display: flex; }
+  /* Leisten oben: 60 px, Schrift 14 px, Symbole ohne Rahmen */
+  .etc .etc-kopf { min-height: 60px; }
+  .etc .etc-wahl-knopf { line-height: 24px; }
+  .etc .etc-sammel-knopf, .etc .etc-sammel-knopf:not([hidden]), .etc .etc-zurueck { display: none; }
+  .etc .etc-seiten { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 20;
+    display: flex; align-items: center; gap: 5px; height: 34px; padding: 0 10px; border-radius: 17px;
+    background: var(--grund); border: 1px solid var(--feldrand); font-variant-numeric: tabular-nums; }
+  .etc .etc-punkt { display: block; width: 24px; height: 30px; padding: 0; border: 0; background: none; cursor: pointer; position: relative; }
+  .etc .etc-punkt::after { content: ""; position: absolute; left: 7px; top: 10px; width: 10px; height: 10px; box-sizing: border-box;
+    border: 1px solid var(--ink); border-radius: 50%; transition: background-color .2s; }
+  .etc .etc-punkt.etc-an::after { background: var(--ink); }
+  .etc .etc-seiten-zahl { min-width: 0; padding-right: 3px; font-size: 14px; color: var(--ink); }
+  .etc .etc-seiten-zahl:empty { display: none; }
+  .etc .etc-seiten.etc-puls { animation: etc-puls-mobil .7s ease-out; }
+  .etc .etc-graph-info { bottom: calc(58px + env(safe-area-inset-bottom)); }
+  /* Seitenwechsel: die neue Seite gleitet von der Seite herein, aus der sie kommt */
+  @keyframes etc-rein-r { from { transform: translateX(35%); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes etc-rein-l { from { transform: translateX(-35%); opacity: 0; } to { transform: none; opacity: 1; } }
+  .etc.etc-rein-r .etc-tafel-bereich { animation: etc-rein-r .28s ease-out; }
+  .etc.etc-rein-l .etc-links { animation: etc-rein-l .28s ease-out; }
+  /* Suche: Feld so breit wie das Auswahlfeld, daneben ein × mit Rahmen statt „Fertig“ */
+  .etc .etc-suche-box { height: 32px; }
+  .etc .etc-suche-fertig { display: flex; align-items: center; justify-content: center; width: 52px; height: 32px; padding: 0; border-radius: 6px; }
+  .etc .etc-suche-fertig[hidden] { display: none; }
+  .etc .etc-fertig-text { display: none; }
+  .etc .etc-fertig-x { display: flex; }
+  .etc .etc-fertig-x svg { width: 15px; height: 15px; }
+  /* Sammlungsleiste: Sammlung Datum Uhrzeit · Download und × rechts */
+  .etc .etc-tafel-kopf { display: flex; gap: 16px; }
+  .etc .etc-tafel-titel { flex: 1 1 auto; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .etc .etc-tafel-kopf .etc-tafel-knoepfe { flex: 0 0 auto; justify-content: flex-end; align-items: center; gap: 22px; }
+  .etc .etc-gen { display: flex; align-items: center; justify-content: flex-end; height: 30px; padding: 0; color: var(--ink); }
+  .etc .etc-gen-text { display: none; }
+  .etc .etc-gen-symbol { display: flex; }
+  .etc .etc-gen-symbol svg { width: 18px; height: 18px; }
+  .etc .etc-tafel-knoepfe .etc-karte-zu { height: 30px; }
+  .etc .etc-tafel-knoepfe .etc-karte-zu svg, .etc .etc-karte-kopf .etc-karte-zu svg { width: 18px; height: 18px; }
+  /* Listen und Karten */
+  .etc .etc-ihalt .etc-thema:first-child h2 { padding-top: 24px; }
+  .etc summary { grid-template-columns: var(--spalte) minmax(0, 1fr); }
+  .etc .etc-typ { display: none; }
+  .etc .etc-tafel { grid-template-columns: 1fr; }
+  .etc .etc-tafel > :first-child { margin-top: 8px; }
+  .etc .etc-karte-kopf { grid-template-columns: var(--pos) minmax(0, 1fr) auto; }
+  .etc .etc-karte .etc-auf { padding-left: var(--rand); }
+  .etc .etc-karte-bild { border-right: 0; }
+  .etc .etc-karte .etc-bilder.etc-mehrere figure { max-width: 100%; }
+  .etc .etc-bild-zu { opacity: 1; }
+  .etc .etc-tafel-leer, .etc .etc-ueber { padding: 20px var(--rand); }
+}
+
+/* Grau etwas leichter */
+.etc .etc-grau, .etc .etc-typ, .etc .etc-thema h2, .etc .etc-dl dt, .etc .etc-intro-hinweis, .etc .etc-graph-info,
+.etc .etc-leeren { font-weight: 250; }
+.etc .etc-text strong, .etc .etc-text th { font-weight: 500; }
+.etc, .etc * { font-variation-settings: "FLAR" 100; }
+
+/* Darstellung auf der Über-Seite */
+.etc .etc-darstellung { margin-top: 2em; }
+.etc .etc-darstellung p { margin: 0 0 0.3em; }
+.etc .etc-darstellung button { font: inherit; color: inherit; background: none; border: 0; padding: 0; margin-right: 12px; cursor: pointer; }
+.etc .etc-darstellung button:hover { color: var(--grau); }
+.etc .etc-darstellung button.etc-aktiv { text-decoration: underline; text-underline-offset: 3px; }
+
+/* alle Symbole mit derselben feinen Linie, egal wie groß sie gezeichnet sind */
+.etc .etc-kopf svg *, .etc .etc-karte-zu svg *, .etc .etc-bild-zu svg *, .etc .etc-text-zu svg * { vector-effect: non-scaling-stroke; stroke-width: 1.5px; }
+
+/* × am Text einer Karte: wie bei den Bildern, erscheint beim Überfahren, mobil immer */
+.etc .etc-textblock { position: relative; padding-right: 30px; }
+.etc .etc-text-zu { position: absolute; top: 2px; right: 0; display: flex; padding: 3px; color: var(--ink); background: none; border: 0; cursor: pointer;
+  opacity: 0; transition: opacity .15s; }
+.etc .etc-textblock:hover .etc-text-zu { opacity: 1; }
+@media (hover: none), (max-width: 800px) { .etc .etc-text-zu { opacity: 1; } }
+
+/* Kachel Fundus ⇄ Projekte: Kreis bzw. Kreis mit Strahlen, quadratisch im Kasten wie das Auswahlfeld daneben, gleiche Höhe, gleicher Rahmen */
+.etc .etc-welt-knopf { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 28px; height: 28px; padding: 0;
+  color: var(--ink); background: var(--grund); border: 1px solid var(--feldrand); border-radius: 6px; cursor: pointer; overflow: hidden;
+  transition: width .2s, margin .2s, opacity .2s, border-color .2s; }
+.etc .etc-welt-knopf[hidden] { display: none; }
+.etc .etc-welt-knopf svg { display: block; width: 100%; height: 100%; flex: 0 0 auto; }
+.etc .etc-kopf .etc-welt-knopf svg * { vector-effect: none; stroke-width: 7px; }
+@media (max-width: 800px) { .etc .etc-welt-knopf { width: 32px; height: 32px; } }
+/* am Rechner wie bei haegeman-temmerman: die Kachel erscheint erst, wenn die Maus links auf dem Fundus ist;
+   bei den Projekten bleibt das Zeichen stehen, damit man sieht, dass man woanders ist */
+@media (hover: hover) and (min-width: 801px) {
+  .etc[data-welt="etc"] .etc-links:not(:hover):not(:focus-within) .etc-welt-knopf { width: 0; margin-left: -16px; opacity: 0; border-color: transparent; }
+}
+
+/* Wechsel der Welt: die linke Seite blendet neu ein */
+@keyframes etc-welt { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.etc .etc-weltwechsel .etc-ihalt { animation: etc-welt .4s ease-out; }  /* der Graph bleibt stehen, nur seine Betonung gleitet */
+
+/* Nacht: schwarzer Grund, weiße Schrift (Klasse „nacht“ am html, gesetzt im Kopf) */
+.nacht .etc { --grund: #000; --ink: #fff; --linie: rgba(255,255,255,.5); --haar: rgba(255,255,255,.2);
+  --feld: #262626; --feldrand: #444; --pfeil: #ddd; }
+.nacht .etc .etc-auf-tafel > details > summary .etc-typ, .nacht .etc .etc-auf-tafel > details > summary .etc-nr { color: rgba(0,0,0,.55); }
+.nacht .etc .etc-wahl-knopf { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 12'%3E%3Cpath d='M1 4.5 4 1.5 7 4.5M1 7.5 4 10.5 7 7.5' fill='none' stroke='%23ddd' stroke-width='1.3'/%3E%3C/svg%3E"); }
+.nacht .etc .etc-wahl-liste { background: #2a2a2a; color: #fff; box-shadow: 0 0 0 .5px rgba(255,255,255,.2), 0 10px 30px rgba(0,0,0,.6); }
+.nacht .etc .etc-wahl-trenner { background: rgba(255,255,255,.18); }
+.nacht .etc .etc-suche-box, .nacht .etc .etc-suche-fertig { background: #1c1c1c; border-color: #444; box-shadow: none; }
+.nacht .etc .etc-suche-kopf, .nacht .etc .etc-suche-fertig { color: #fff; }
+.nacht .etc .etc-suche-fertig:active { background: #333; }
+.nacht .etc .etc-suche-loesch { background: #666; color: #000; }
+@keyframes etc-da-nacht { from { background: rgba(255,255,255,.08); } to { background: transparent; } }
+.nacht .etc .etc-neu-da { animation-name: etc-da-nacht; }
+
+.etc.etc-einzel { display: block; max-width: 760px; margin: 0 auto; padding: 18px var(--rand, 16px) 60px; height: auto; overflow: visible; }
+.etc-einzel-kopf { display: flex; gap: 16px; align-items: baseline; padding: 6px 0 28px; }
+.etc-einzel-kopf a { color: inherit; text-decoration: none; font-weight: 500; }
+.etc-einzel h1 { font-size: 22px; font-weight: 400; margin: 0 0 18px; }
+.etc-einzel .etc-bilder img { max-width: 100%; height: auto; }
+.etc-einzel-fuss { margin-top: 36px; }
+.etc-einzel .etc-text { margin-top: 22px; }
+.etc-einzel .etc-bilder { margin-top: 22px; display: grid; gap: 12px; }
+</style></head>
+<body><div class="etc etc-einzel"><header class="etc-einzel-kopf"><a href="../#21st-century-museum-of-contemporary-art">et</a><span class="etc-grau">b-243 · bauwerke</span></header><main><h1>21st Century Museum of Contemporary Art</h1><dl class="etc-dl"><dt>autor</dt><dd>SANAA</dd><dt>jahr</dt><dd>1999–2004</dd><dt>ort</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=36.5608,136.658" target="_blank" rel="noopener">Kanazawa</a> <span class="etc-grau">·</span> <a href="../#21st-century-museum-of-contemporary-art">auf der Karte</a></dd><dt>tags</dt><dd>exkursion/japan</dd></dl><div class="etc-text"><p>Ein Museum für Gegenwartskunst in Kanazawa, von SANAA (<a href="../kazuyo-sejima/">Kazuyo Sejima</a> und <a href="../ryue-nishizawa/">Ryue Nishizawa</a>) gebaut und 2004 eröffnet. Ein flacher, runder Glasbau mit über hundert Metern Durchmesser hat keine Vorder- und keine Rückseite; man kann ihn von allen Seiten betreten. Darin stehen die Ausstellungsräume als einzelne Kuben unterschiedlicher Höhe, zwischen ihnen Lichthöfe und frei zugängliche Wege.</p>
+<p>Das Museum ist zugleich Park und Stadtraum: Ein großer Teil ist ohne Eintritt zugänglich, Kinder, Schulklassen und Passanten gehen hindurch. Bekannt ist der „Swimming Pool“ von Leandro Erlich, unter dessen Wasseroberfläche man hindurchgehen kann.</p>
+<h3>Quellen</h3>
+<ul><li><a href="https://www.wikidata.org/wiki/Q3242206" target="_blank" rel="noopener">Wikidata Q3242206</a></li><li>Exkursionsreader (intern)</li></ul></div><p class="etc-einzel-fuss"><a href="../#21st-century-museum-of-contemporary-art">im Fundus öffnen</a></p></main></div></body></html>
